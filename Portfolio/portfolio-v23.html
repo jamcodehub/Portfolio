@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+    <title>James - Digital Creator & Tech Enthusiast</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Home View -->
+    <div id="homeView" class="home-view">
+        <div class="container">
+            <header class="header">
+                <div class="header-content">
+                    <div class="profile-circle">
+                        <!-- Upload your image as: assets/profile.png (or .jpg) -->
+                        <img src="assets/imgs/james.png" alt="Profile" class="profile-image">
+                    </div>
+                    <div class="header-text">
+                        <h1>James</h1>
+                        <p class="tagline">Digital Creator & Tech Enthusiast</p>
+                    </div>
+                </div>
+            </header>
+
+            <section class="categories">
+                <div class="category-grid">
+                    <div class="category-card">
+                        <h2>Prompt Engineering</h2>
+                        <ul class="project-list">
+                            <li onclick="showProject('prompt', 0)">StepQuest</li>
+                            <li onclick="showProject('prompt', 1)">MindMotion</li>
+                            <li onclick="showProject('prompt', 2)">D&D Survivors</li>
+                        </ul>
+                    </div>
+                    <div class="category-card">
+                        <h2>Program Development</h2>
+                        <ul class="project-list">
+                            <li onclick="showProject('development', 0)">Cyber Security Program</li>
+                        </ul>
+                    </div>
+                    <div class="category-card">
+                        <h2>Digital Design</h2>
+                        <ul class="project-list">
+                            <li onclick="showProject('graphicDesign', 0)">Digital Design Portfolio</li>
+                        </ul>
+                    </div>
+                    <div class="category-card">
+                        <h2>Websites</h2>
+                        <ul class="project-list">
+                            <li onclick="showProject('websites', 0)">Lumen Elixir</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="footer">
+                <div class="footer-content">
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/james-boardman-30b10016a/" target="_blank" rel="noopener noreferrer" class="social-icon" title="LinkedIn">in</a>
+                        <a href="https://github.com/jamcodehub" target="_blank" rel="noopener noreferrer" class="social-icon" title="GitHub">gh</a>
+                    </div>
+                    <button class="contact-button" onclick="openContactModal()">Contact Me</button>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Project Detail View -->
+    <div id="projectDetail" class="project-detail">
+        <div class="container">
+            <button class="back-button" onclick="showHome()">← Back to Portfolio</button>
+            <h1 id="projectTitle"></h1>
+            <span class="category-tag" id="projectCategory"></span>
+
+            <!-- Interactive Demo Section -->
+            <div id="demoSection" class="demo-section" style="display: none;">
+                <!-- StepQuest Demo -->
+                <div id="stepquestDemo" style="display: none;">
+                    <iframe id="stepquestFrame" src="stepquest-demo.html" style="width: 100%; height: 900px; border: none;"></iframe>
+                    <p class="demo-label">Swipe or drag to navigate between screens</p>
+                </div>
+
+                <!-- Design Gallery Demo -->
+                <div id="designGallery" style="display: none;">
+                    <div class="design-gallery-container">
+                        <button class="gallery-nav gallery-nav-left" onclick="navigateGallery(-1)">←</button>
+                        <button class="gallery-nav gallery-nav-right" onclick="navigateGallery(1)">→</button>
+                        <div class="gallery-track-wrapper">
+                            <div id="galleryTrack" class="gallery-track">
+                                <!-- Original Gallery items -->
+                                <div class="gallery-item">
+                                    <div class="gallery-placeholder"><span>Logo Design</span></div>
+                                </div>
+                                <div class="gallery-item">
+                                    <div class="gallery-placeholder"><span>Website Mockup</span></div>
+                                </div>
+                                <div class="gallery-item">
+                                    <div class="gallery-placeholder"><span>Brand Identity</span></div>
+                                </div>
+                                <div class="gallery-item">
+                                    <div class="gallery-placeholder"><span>Digital Illustration</span></div>
+                                </div>
+                                <div class="gallery-item">
+                                    <div class="gallery-placeholder"><span>Social Media Graphics</span></div>
+                                </div>
+                                <div class="gallery-item">
+                                    <div class="gallery-placeholder"><span>Presentation Design</span></div>
+                                </div>
+                                <!-- Duplicated items for seamless loop -->
+                                <div class="gallery-item">
+                                    <div class="gallery-placeholder"><span>Logo Design</span></div>
+                                </div>
+                                <div class="gallery-item">
+                                    <div class="gallery-placeholder"><span>Website Mockup</span></div>
+                                </div>
+                                <div class="gallery-item">
+                                    <div class="gallery-placeholder"><span>Brand Identity</span></div>
+                                </div>
+                                <div class="gallery-item">
+                                    <div class="gallery-placeholder"><span>Digital Illustration</span></div>
+                                </div>
+                                <div class="gallery-item">
+                                    <div class="gallery-placeholder"><span>Social Media Graphics</span></div>
+                                </div>
+                                <div class="gallery-item">
+                                    <div class="gallery-placeholder"><span>Presentation Design</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="demo-label">Auto-panning gallery • Use arrows to navigate</p>
+                </div>
+
+                <!-- Lumen Elixir Website Demo -->
+                <div id="lumenElixirDemo" style="display: none;">
+                    <div class="website-demo-container">
+                        <div class="website-demo-browser">
+                            <div class="browser-bar">
+                                <div class="browser-dots">
+                                    <span></span><span></span><span></span>
+                                </div>
+                                <div class="browser-url">lumenelixir.com</div>
+                            </div>
+                            <div id="lumenWebsite" class="website-content">
+                                <!-- Content will be rendered here -->
+                            </div>
+                        </div>
+                    </div>
+                    <p class="demo-label">Interactive website demo • Click to explore</p>
+                </div>
+
+                <!-- MindMotion Demo -->
+                <div id="mindmotionDemo" style="display: none;">
+                    <iframe id="mindmotionFrame" src="mindmotion-demo.html" style="width: 100%; height: 900px; border: none;"></iframe>
+                    <p class="demo-label">Swipe through educational content • Navigate between tabs</p>
+                </div>
+            </div>
+
+            <div class="project-content">
+                <h2>Overview</h2>
+                <p id="projectDescription"></p>
+                <h2>Key Features</h2>
+                <ul id="projectFeatures"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div id="contactModal" class="modal-overlay" onclick="closeContactModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <h2>Get in Touch</h2>
+            <form onsubmit="submitContact(event)">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="contactName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="contactEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea id="contactMessage" required></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="cancel-button" onclick="closeContactModal()">Cancel</button>
+                    <button type="submit" class="submit-button">Send Message</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Project data
+        const projects = {
+            prompt: [
+                {
+                    name: 'StepQuest',
+                    category: 'Prompt Engineering',
+                    description: 'A comprehensive fitness tracking app built through iterative AI-assisted development, taking over 200+ prompt messages to reach a stable, production-ready state.',
+                    features: [
+                        'Apple Watch integration for real-time step tracking',
+                        'AI fitness coaching using Claude API',
+                        'Leveling system and gamification mechanics',
+                        'Social features with friends and teams',
+                        'Loot box system with cosmetic rewards',
+                        'Premium subscription model'
+                    ],
+                    hasDemo: true,
+                    promptingTechniques: [
+                        'Started with comprehensive requirements documentation before any coding',
+                        'Provided complete code files for review rather than fragments',
+                        'Used iterative testing - implemented features step-by-step, testing before moving forward',
+                        'Asked clarifying questions when uncertain instead of assuming',
+                        'Maintained clear context by referencing previous work and decisions',
+                        'Broke complex features into manageable chunks (base avatar system, then customization, then loot boxes)',
+                        'Practiced systematic debugging by providing exact error messages and context',
+                        'Conducted regular code reviews at project milestones',
+                        'Balanced shipping functional features with perfectionism'
+                    ]
+                },
+                {
+                    name: 'MindMotion',
+                    category: 'Prompt Engineering',
+                    description: 'An educational video platform designed as an intellectual alternative to TikTok, featuring iOS app and Node.js backend. Currently in proof of concept stage.',
+                    features: [
+                        'Short-form educational video content',
+                        'SwiftUI frontend with smooth animations',
+                        'Node.js/Express backend API',
+                        'User authentication and profiles',
+                        'Content recommendation system',
+                        'Cross-platform compatibility'
+                    ],
+                    hasDemo: true
+                },
+                {
+                    name: 'D&D Survivors',
+                    category: 'Prompt Engineering',
+                    description: 'Browser-based survival game inspired by Vampire Survivors with four character classes and sophisticated balance mechanics.',
+                    features: [
+                        'Four unique character classes with distinct abilities',
+                        'Wave-based enemy spawning system',
+                        'Experience and leveling mechanics',
+                        'Balanced progression systems',
+                        'Responsive controls and smooth gameplay',
+                        'Strategic upgrade choices'
+                    ]
+                }
+            ],
+            development: [
+                {
+                    name: 'Cyber Security Program',
+                    category: 'Program Development',
+                    description: 'This project is confidential. Details are available only to internal staff in accordance with company privacy policies.',
+                    features: [
+                        'React.js - Component-based UI with hooks',
+                        'JavaScript/ES6 - Modern programming patterns',
+                        'Tailwind CSS - Responsive styling',
+                        'Game Mechanics - Educational gameplay design',
+                        'Vite - Build tooling',
+                        'Electron - Desktop packaging',
+                        'Educational Design - Gamifying security concepts for engagement'
+                    ],
+                    isConfidential: true,
+                    promptingTechniques: [
+                        'Provided clear requirements upfront with UI/UX needs',
+                        'Iterated systematically through features (activity logs, difficulty adjustments)',
+                        'Tested each iteration and provided detailed feedback',
+                        'Requested complete implementation with deployment instructions'
+                    ]
+                }
+            ],
+            graphicDesign: [
+                {
+                    name: 'Digital Design Portfolio',
+                    category: 'Digital Design',
+                    description: 'A showcase of visual design work spanning branding, web design, and digital illustrations.',
+                    features: [
+                        'Adobe Illustrator - Vector graphics and logo creation',
+                        'Adobe Photoshop - Image editing and digital artwork',
+                        'Microsoft PowerPoint - Presentation design and visual storytelling',
+                        'AI Tools - AI-assisted design and image generation'
+                    ],
+                    skills: [
+                        'Logo Design - Creating brand identities and visual marks',
+                        'Website Design - UI/UX mockups and landing page layouts',
+                        'Digital Illustration - Character art and concept designs',
+                        'Brand Identity - Cohesive visual systems and style guides',
+                        'Social Media Graphics - Engaging visual content for platforms',
+                        'Presentation Design - Professional slides and infographics',
+                        'Typography - Font pairing and text-based design',
+                        'Color Theory - Strategic use of color palettes'
+                    ],
+                    hasDemo: true
+                }
+            ],
+            websites: [
+                {
+                    name: 'Lumen Elixir',
+                    category: 'Websites',
+                    description: 'A fantasy-themed e-commerce website for a potion bottle craft shop. Features product filtering, shopping cart functionality, and an enchanted aesthetic.',
+                    features: [
+                        'E-commerce functionality with shopping cart',
+                        'Product filtering and sorting system',
+                        'Responsive design for all devices',
+                        'Modal-based checkout flow',
+                        'Fantasy-themed UI with custom animations'
+                    ],
+                    hasDemo: true
+                }
+            ]
+        };
+
+        function showProject(category, index) {
+            const project = projects[category][index];
+            
+            document.getElementById('projectTitle').textContent = project.name;
+            document.getElementById('projectCategory').textContent = project.category;
+            document.getElementById('projectDescription').textContent = project.description;
+            
+            const featuresList = document.getElementById('projectFeatures');
+            const featuresTitle = featuresList.previousElementSibling;
+            
+            // Remove any existing dynamic sections
+            const existingSections = document.querySelectorAll('.prompting-techniques-section, .project-logo-section, .design-skills-section');
+            existingSections.forEach(section => section.remove());
+            
+            // Handle confidential projects
+            if (project.isConfidential) {
+                const logoSection = document.createElement('div');
+                logoSection.className = 'project-logo-section';
+                logoSection.innerHTML = '<div style="font-size: 80px; text-align: center; margin: 30px auto; background: #8B5CF6; border-radius: 12px; padding: 30px; display: inline-block; line-height: 1;">🔒</div>';
+                featuresList.parentElement.insertBefore(logoSection, featuresList.parentElement.firstChild);
+                
+                featuresTitle.textContent = 'Technologies & Skills Used';
+                featuresList.innerHTML = '';
+                project.features.forEach(feature => {
+                    const li = document.createElement('li');
+                    li.textContent = feature;
+                    featuresList.appendChild(li);
+                });
+                
+                if (project.promptingTechniques) {
+                    const promptSection = document.createElement('div');
+                    promptSection.className = 'prompting-techniques-section';
+                    promptSection.innerHTML = '<h2>Prompt Engineering Approach</h2>';
+                    const promptList = document.createElement('ul');
+                    project.promptingTechniques.forEach(technique => {
+                        const li = document.createElement('li');
+                        li.textContent = technique;
+                        promptList.appendChild(li);
+                    });
+                    promptSection.appendChild(promptList);
+                    featuresList.parentElement.appendChild(promptSection);
+                }
+            }
+            // Handle design projects
+            else if (project.skills) {
+                featuresTitle.textContent = 'Programs Used';
+                featuresList.innerHTML = '';
+                project.features.forEach(feature => {
+                    const li = document.createElement('li');
+                    li.textContent = feature;
+                    featuresList.appendChild(li);
+                });
+                
+                const skillsSection = document.createElement('div');
+                skillsSection.className = 'design-skills-section';
+                skillsSection.innerHTML = '<h2>Design Skills</h2>';
+                const skillsList = document.createElement('ul');
+                project.skills.forEach(skill => {
+                    const li = document.createElement('li');
+                    li.textContent = skill;
+                    skillsList.appendChild(li);
+                });
+                skillsSection.appendChild(skillsList);
+                featuresList.parentElement.appendChild(skillsSection);
+            }
+            // Regular projects
+            else {
+                featuresTitle.textContent = 'Key Features';
+                featuresList.innerHTML = '';
+                project.features.forEach(feature => {
+                    const li = document.createElement('li');
+                    li.textContent = feature;
+                    featuresList.appendChild(li);
+                });
+            }
+            
+            // Add prompting techniques section if available
+            if (project.promptingTechniques && !project.isConfidential) {
+                const promptSection = document.createElement('div');
+                promptSection.className = 'prompting-techniques-section';
+                promptSection.innerHTML = '<h2>Prompting Techniques Used</h2><p style="margin-bottom: 1rem; color: var(--gray);">This project required 200+ prompt messages to reach a stable state. Here are the key techniques that made it successful:</p>';
+                const promptList = document.createElement('ul');
+                project.promptingTechniques.forEach(technique => {
+                    const li = document.createElement('li');
+                    li.textContent = technique;
+                    promptList.appendChild(li);
+                });
+                promptSection.appendChild(promptList);
+                featuresList.parentElement.appendChild(promptSection);
+            }
+            
+            // Handle demos
+            const demoSection = document.getElementById('demoSection');
+            const stepquestDemo = document.getElementById('stepquestDemo');
+            const designGallery = document.getElementById('designGallery');
+            const lumenElixirDemo = document.getElementById('lumenElixirDemo');
+            const mindmotionDemo = document.getElementById('mindmotionDemo');
+            
+            if (project.hasDemo && project.name === 'StepQuest') {
+                demoSection.style.display = 'block';
+                stepquestDemo.style.display = 'block';
+                designGallery.style.display = 'none';
+                lumenElixirDemo.style.display = 'none';
+                mindmotionDemo.style.display = 'none';
+                initStepQuestDemo();
+            } else if (project.hasDemo && project.name === 'MindMotion') {
+                demoSection.style.display = 'block';
+                stepquestDemo.style.display = 'none';
+                designGallery.style.display = 'none';
+                lumenElixirDemo.style.display = 'none';
+                mindmotionDemo.style.display = 'block';
+                initMindMotionDemo();
+            } else if (project.hasDemo && project.name === 'Digital Design Portfolio') {
+                demoSection.style.display = 'block';
+                stepquestDemo.style.display = 'none';
+                designGallery.style.display = 'block';
+                lumenElixirDemo.style.display = 'none';
+                mindmotionDemo.style.display = 'none';
+                initDesignGallery();
+            } else if (project.hasDemo && project.name === 'Lumen Elixir') {
+                demoSection.style.display = 'block';
+                stepquestDemo.style.display = 'none';
+                designGallery.style.display = 'none';
+                lumenElixirDemo.style.display = 'block';
+                mindmotionDemo.style.display = 'none';
+                initLumenElixirDemo();
+            } else {
+                demoSection.style.display = 'none';
+            }
+            
+            document.getElementById('homeView').classList.add('hidden');
+            document.getElementById('projectDetail').classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // StepQuest Demo Functions
+        function initStepQuestDemo() {
+            // StepQuest demo is loaded via iframe - no initialization needed
+        }
+
+        // Design Gallery Functions
+        let currentGalleryIndex = 0;
+        let galleryAutoPlay = null;
+        const galleryItems = 6;
+
+        function initDesignGallery() {
+            currentGalleryIndex = 0;
+            updateGalleryPosition();
+            startGalleryAutoPlay();
+        }
+
+        function updateGalleryPosition(instant = false) {
+            const track = document.getElementById('galleryTrack');
+            if (!track) return;
+            
+            const isMobile = window.innerWidth <= 640;
+            const itemWidth = isMobile ? 280 + 30 : 400 + 30;
+            const offset = -(currentGalleryIndex * itemWidth);
+            
+            if (instant) {
+                track.style.transition = 'none';
+                track.style.transform = `translateX(${offset}px)`;
+                track.offsetHeight;
+                track.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            } else {
+                track.style.transform = `translateX(${offset}px)`;
+            }
+        }
+
+        function navigateGallery(direction) {
+            stopGalleryAutoPlay();
+            
+            currentGalleryIndex += direction;
+            updateGalleryPosition();
+            
+            setTimeout(() => {
+                if (currentGalleryIndex >= galleryItems) {
+                    currentGalleryIndex = 0;
+                    updateGalleryPosition(true);
+                } else if (currentGalleryIndex < 0) {
+                    currentGalleryIndex = galleryItems - 1;
+                    updateGalleryPosition(true);
+                }
+            }, 600);
+            
+            setTimeout(startGalleryAutoPlay, 3000);
+        }
+
+        function startGalleryAutoPlay() {
+            stopGalleryAutoPlay();
+            galleryAutoPlay = setInterval(() => {
+                currentGalleryIndex++;
+                updateGalleryPosition();
+                
+                if (currentGalleryIndex >= galleryItems) {
+                    setTimeout(() => {
+                        currentGalleryIndex = 0;
+                        updateGalleryPosition(true);
+                    }, 600);
+                }
+            }, 3000);
+        }
+
+        function stopGalleryAutoPlay() {
+            if (galleryAutoPlay) {
+                clearInterval(galleryAutoPlay);
+                galleryAutoPlay = null;
+            }
+        }
+
+        // Lumen Elixir Demo Functions
+        function initLumenElixirDemo() {
+            renderLumenPage('home');
+        }
+
+        function renderLumenPage(page) {
+            const container = document.getElementById('lumenWebsite');
+            if (!container) return;
+            
+            if (page === 'home') {
+                container.innerHTML = `
+                    <div class="le-header">
+                        <div class="le-logo">🌙 Lumen Elixir</div>
+                        <div class="le-nav">
+                            <a onclick="renderLumenPage('home')">Home</a>
+                            <a onclick="renderLumenPage('products')">Products</a>
+                        </div>
+                    </div>
+                    <div class="le-home">
+                        <h1>Welcome to Lumen Elixir</h1>
+                        <p class="subtitle">Your premium potion bottle craft shop</p>
+                        <p class="description">Handcrafted bottles for your magical potions, brewed with care and enchanted with purpose.</p>
+                        <button class="le-cta-button" onclick="renderLumenPage('products')">Explore Our Collection</button>
+                    </div>
+                `;
+            } else if (page === 'products') {
+                container.innerHTML = `
+                    <div class="le-header">
+                        <div class="le-logo">🌙 Lumen Elixir</div>
+                        <div class="le-nav">
+                            <a onclick="renderLumenPage('home')">Home</a>
+                            <a onclick="renderLumenPage('products')">Products</a>
+                        </div>
+                    </div>
+                    <div class="le-products">
+                        <h1>Our Potion Bottles</h1>
+                        <div class="le-products-grid">
+                            <div class="le-product-card">
+                                <div class="le-product-emoji">🧪</div>
+                                <h3>Health Potion Dice</h3>
+                                <div class="price">$24.99</div>
+                                <button class="le-buy-btn">Add to Cart</button>
+                            </div>
+                            <div class="le-product-card">
+                                <div class="le-product-emoji">🔮</div>
+                                <h3>Enchanted Orb Bottle</h3>
+                                <div class="price">$34.99</div>
+                                <button class="le-buy-btn">Add to Cart</button>
+                            </div>
+                            <div class="le-product-card">
+                                <div class="le-product-emoji">✨</div>
+                                <h3>Luminous Night Vial</h3>
+                                <div class="price">$22.99</div>
+                                <button class="le-buy-btn">Add to Cart</button>
+                            </div>
+                            <div class="le-product-card">
+                                <div class="le-product-emoji">🌙</div>
+                                <h3>Arcane Eye Charm</h3>
+                                <div class="price">$9.99</div>
+                                <button class="le-buy-btn">Add to Cart</button>
+                            </div>
+                            <div class="le-product-card">
+                                <div class="le-product-emoji">👑</div>
+                                <h3>Royal Elixir Flask</h3>
+                                <div class="price">$89.99</div>
+                                <button class="le-buy-btn">Add to Cart</button>
+                            </div>
+                            <div class="le-product-card">
+                                <div class="le-product-emoji">💜</div>
+                                <h3>Potion Drop Earrings</h3>
+                                <div class="price">$18.99</div>
+                                <button class="le-buy-btn">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // MindMotion Demo Function
+        function initMindMotionDemo() {
+            // MindMotion demo is loaded via iframe - no initialization needed
+        }
+
+        function showHome() {
+            document.getElementById('homeView').classList.remove('hidden');
+            document.getElementById('projectDetail').classList.remove('active');
+            
+            const existingSections = document.querySelectorAll('.prompting-techniques-section, .project-logo-section, .design-skills-section');
+            existingSections.forEach(section => section.remove());
+            
+            stopGalleryAutoPlay();
+            demoCurrentTab = 1;
+            
+            window.scrollTo(0, 0);
+        }
+
+        function openContactModal() {
+            document.getElementById('contactModal').classList.add('active');
+        }
+
+        function closeContactModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('contactModal').classList.remove('active');
+        }
+
+        function submitContact(event) {
+            event.preventDefault();
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const message = document.getElementById('contactMessage').value;
+            
+            const emailUser = 'nebscodes';
+            const emailDomain = 'gmail.com';
+            const contactEmail = emailUser + '@' + emailDomain;
+            
+            const mailtoLink = `mailto:${contactEmail}?subject=Portfolio Contact from ${encodeURIComponent(name)}&body=${encodeURIComponent(
+                `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+            )}`;
+            
+            window.location.href = mailtoLink;
+            closeContactModal();
+            
+            document.getElementById('contactName').value = '';
+            document.getElementById('contactEmail').value = '';
+            document.getElementById('contactMessage').value = '';
+        }
+
+        // Mouse-tracking underline animation
+        function initMouseTrackingUnderline() {
+            const headerH1 = document.querySelector('.header h1');
+            const headerP = document.querySelector('.header p');
+
+            function handleMouseMove(e, element) {
+                const rect = element.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const percentage = (x / rect.width) * 100;
+                
+                // Create gradient centered on mouse with fade on both sides
+                const leftFade = Math.max(0, percentage - 15);
+                const rightFade = Math.min(100, percentage + 15);
+                
+                const gradient = `linear-gradient(90deg, 
+                    transparent 0%, 
+                    transparent ${leftFade}%, 
+                    rgba(139, 92, 246, 0.6) ${percentage}%, 
+                    transparent ${rightFade}%, 
+                    transparent 100%)`;
+                
+                element.style.setProperty('--underline-gradient', gradient);
+            }
+
+            if (headerH1) {
+                headerH1.addEventListener('mousemove', (e) => handleMouseMove(e, headerH1));
+            }
+
+            if (headerP) {
+                headerP.addEventListener('mousemove', (e) => handleMouseMove(e, headerP));
+            }
+        }
+
+        // Initialize on page load
+        initMouseTrackingUnderline();
+    </script>
+</body>
+</html>

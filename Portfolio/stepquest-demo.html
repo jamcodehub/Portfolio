@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StepQuest Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .demo-container {
+            width: 375px;
+            height: 812px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 40px;
+            overflow: hidden;
+            border: 3px solid rgba(26, 26, 26, 0.8);
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .demo-notch {
+            width: 150px;
+            height: 30px;
+            background: #1a1a1a;
+            border-radius: 0 0 20px 20px;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .demo-screen {
+            height: 100%;
+            overflow: hidden;
+            background: white;
+        }
+
+        .demo-tabs {
+            display: flex;
+            height: 100%;
+        }
+
+        .demo-tab {
+            min-width: 375px;
+            height: 100%;
+            padding: 50px 25px 25px;
+            overflow-y: auto;
+        }
+
+        /* StepQuest Specific Styles */
+        .stepquest-social {
+            background: white;
+        }
+
+        .stepquest-progress {
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stepquest-premium {
+            background: linear-gradient(135deg, #AED9E0, #68D5E8);
+            text-align: center;
+        }
+
+        .sq-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .sq-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #AED9E0, #68D5E8);
+            border: 3px solid #AED9E0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .sq-title {
+            flex: 1;
+            margin-left: 15px;
+        }
+
+        .sq-title h1 {
+            font-size: 24px;
+            color: #AED9E0;
+            margin: 0;
+        }
+
+        .sq-title p {
+            font-size: 12px;
+            color: #999;
+            margin: 0;
+        }
+
+        .sq-circular-progress {
+            width: 280px;
+            height: 280px;
+            position: relative;
+            margin: 40px 0;
+        }
+
+        .sq-progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .sq-progress-bg {
+            fill: none;
+            stroke: #f0f0f0;
+            stroke-width: 25;
+        }
+
+        .sq-progress-bar {
+            fill: none;
+            stroke: #AED9E0;
+            stroke-width: 25;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .sq-center-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .sq-steps {
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .sq-steps-label {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 15px;
+        }
+
+        .sq-level-badge {
+            font-size: 20px;
+            color: #AED9E0;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .sq-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .sq-stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid #AED9E0;
+        }
+
+        .sq-stat-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .sq-stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .sq-stat-label {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .sq-swipe-hint {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding: 0 20px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .premium-badge {
+            font-size: 64px;
+            margin-bottom: 10px;
+        }
+
+        .demo-label {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="demo-container">
+            <div class="demo-notch"></div>
+            <div id="demoScreen" class="demo-screen">
+                <div id="demoTabs" class="demo-tabs">
+                    <!-- Social Tab -->
+                    <div class="demo-tab stepquest-social">
+                        <h2 style="color: #AED9E0; margin-bottom: 20px;">Friends & Teams</h2>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #AED9E0;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #AED9E0, #68D5E8); border-radius: 50%;"></div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: bold;">Friend 1</div>
+                                    <div style="font-size: 12px; color: #999;">Level 15 • 8,234 steps</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #AED9E0;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #AED9E0, #68D5E8); border-radius: 50%;"></div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: bold;">Friend 2</div>
+                                    <div style="font-size: 12px; color: #999;">Level 22 • 12,456 steps</div>
+                                </div>
+                            </div>
+                        </div>
+                        <h3 style="color: #AED9E0; margin: 30px 0 15px;">Your Team</h3>
+                        <div style="background: linear-gradient(135deg, #AED9E0, #68D5E8); padding: 25px; border-radius: 15px; color: white;">
+                            <div style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">Team Awesome</div>
+                            <div style="font-size: 14px; opacity: 0.9;">Level 10 • 45,678 total steps</div>
+                            <div style="font-size: 12px; opacity: 0.8; margin-top: 10px;">4 members</div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Tab -->
+                    <div class="demo-tab stepquest-progress">
+                        <div class="sq-header">
+                            <div style="display: flex; align-items: center;">
+                                <div class="sq-avatar">👤</div>
+                                <div class="sq-title">
+                                    <h1>StepQuest</h1>
+                                    <p>@YourUsername</p>
+                                </div>
+                            </div>
+                            <div style="font-size: 24px; color: #AED9E0;">⚙️</div>
+                        </div>
+
+                        <div class="sq-circular-progress">
+                            <svg class="sq-progress-ring" width="280" height="280">
+                                <circle class="sq-progress-bg" cx="140" cy="140" r="127.5"></circle>
+                                <circle id="progressCircle" class="sq-progress-bar" cx="140" cy="140" r="127.5"></circle>
+                            </svg>
+                            <div class="sq-center-content">
+                                <div class="sq-steps">7,543</div>
+                                <div class="sq-steps-label">steps today</div>
+                                <div class="sq-level-badge">Level 18</div>
+                                <div style="font-size: 12px; color: #999; margin-top: 5px;">Active Adventurer</div>
+                            </div>
+                        </div>
+
+                        <div class="sq-stats">
+                            <div class="sq-stat-card">
+                                <div class="sq-stat-icon">🚶</div>
+                                <div class="sq-stat-value">7,543</div>
+                                <div class="sq-stat-label">Today</div>
+                            </div>
+                            <div class="sq-stat-card">
+                                <div class="sq-stat-icon">⭐</div>
+                                <div class="sq-stat-value">234K</div>
+                                <div class="sq-stat-label">Total</div>
+                            </div>
+                        </div>
+
+                        <div class="sq-swipe-hint">
+                            <span>← Social</span>
+                            <span>Premium →</span>
+                        </div>
+                    </div>
+
+                    <!-- Premium Tab -->
+                    <div class="demo-tab stepquest-premium">
+                        <div class="premium-badge">👑</div>
+                        <h2 style="color: white; font-size: 28px; margin: 20px 0;">Upgrade to Premium</h2>
+                        <p style="color: white; opacity: 0.9; margin-bottom: 30px;">Unlock exclusive features</p>
+                        
+                        <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 15px; margin: 15px 0; text-align: left;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div style="font-size: 32px;">✨</div>
+                                <div>
+                                    <div style="color: white; font-weight: bold;">Gold Tier Cosmetics</div>
+                                    <div style="color: white; opacity: 0.8; font-size: 14px;">Exclusive legendary items</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 15px; margin: 15px 0; text-align: left;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div style="font-size: 32px;">🏆</div>
+                                <div>
+                                    <div style="color: white; font-weight: bold;">Achievement Rewards</div>
+                                    <div style="color: white; opacity: 0.8; font-size: 14px;">Earn special cosmetics</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 15px; margin: 15px 0; text-align: left;">
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div style="font-size: 32px;">📊</div>
+                                <div>
+                                    <div style="color: white; font-weight: bold;">Advanced Features</div>
+                                    <div style="color: white; opacity: 0.8; font-size: 14px;">Calorie counter & more</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 40px;">
+                            <div style="color: white; font-size: 24px; font-weight: bold; margin-bottom: 10px;">Just $4/month</div>
+                            <div style="background: white; color: #AED9E0; padding: 16px 40px; border-radius: 25px; font-weight: bold; display: inline-block; cursor: pointer;">Start Premium</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="demo-label">Swipe or drag to navigate between screens</p>
+    </div>
+
+    <script>
+        let demoCurrentTab = 1;
+        let demoStartX = 0;
+        let demoIsDragging = false;
+
+        // Initialize progress circle animation
+        const progressCircle = document.getElementById('progressCircle');
+        const radius = progressCircle.r.baseVal.value;
+        const circumference = radius * 2 * Math.PI;
+        progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+        
+        // Set progress to 65%
+        const progress = 0.65;
+        const offset = circumference - progress * circumference;
+        progressCircle.style.strokeDashoffset = offset;
+
+        // Swipe handling
+        const demoScreen = document.getElementById('demoScreen');
+        const demoTabs = document.getElementById('demoTabs');
+
+        // Disable transition initially, set position, then re-enable
+        demoTabs.style.transition = 'none';
+        demoTabs.style.transform = 'translateX(-375px)';
+        // Force reflow
+        demoTabs.offsetHeight;
+        // Re-enable transition
+        demoTabs.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+
+        function updateDemoPosition() {
+            demoTabs.style.transform = `translateX(-${demoCurrentTab * 375}px)`;
+        }
+
+        demoScreen.addEventListener('touchstart', handleDemoStart, false);
+        demoScreen.addEventListener('touchmove', handleDemoMove, false);
+        demoScreen.addEventListener('touchend', handleDemoEnd, false);
+        demoScreen.addEventListener('mousedown', handleDemoStart, false);
+        demoScreen.addEventListener('mousemove', handleDemoMove, false);
+        demoScreen.addEventListener('mouseup', handleDemoEnd, false);
+        demoScreen.addEventListener('mouseleave', handleDemoEnd, false);
+
+        function handleDemoStart(e) {
+            demoIsDragging = true;
+            demoStartX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        }
+
+        function handleDemoMove(e) {
+            if (!demoIsDragging) return;
+            e.preventDefault();
+        }
+
+        function handleDemoEnd(e) {
+            if (!demoIsDragging) return;
+            demoIsDragging = false;
+            
+            const endX = e.type.includes('mouse') ? e.clientX : e.changedTouches[0].clientX;
+            const diff = demoStartX - endX;
+            
+            if (Math.abs(diff) > 50) {
+                if (diff > 0 && demoCurrentTab < 2) {
+                    demoCurrentTab++;
+                } else if (diff < 0 && demoCurrentTab > 0) {
+                    demoCurrentTab--;
+                }
+                updateDemoPosition();
+            }
+        }
+    </script>
+</body>
+</html>
