@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindMotion Demo</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .demo-container {
+            width: 375px;
+            height: 812px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 40px;
+            overflow: hidden;
+            border: 3px solid rgba(26, 26, 26, 0.8);
+            position: relative;
+        }
+        .demo-notch {
+            width: 150px;
+            height: 30px;
+            background: #1a1a1a;
+            border-radius: 0 0 20px 20px;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+        .demo-screen { width: 100%; height: 100%; overflow: hidden; background: white; }
+        #root { width: 100%; height: 100%; }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-notch"></div>
+        <div class="demo-screen"><div id="root"></div></div>
+    </div>
+    <script type="text/babel">
+        const { useState } = React;
+        function MindMotionApp() {
+            const [currentTab, setCurrentTab] = useState('feed');
+            const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+            const [likedVideos, setLikedVideos] = useState([]);
+            const [savedVideos, setSavedVideos] = useState([]);
+            const [following, setFollowing] = useState([]);
+            const videos = [
+                { id: 1, title: "Understanding Quantum Entanglement", description: "A simple explanation of one of the most mysterious phenomena in physics", category: "Science", creator: "Dr. Sarah Johnson", credentials: "PhD in Physics, MIT", verified: true, likes: 2500, thumbnail: "🌌" },
+                { id: 2, title: "The Beauty of Prime Numbers", description: "Exploring the patterns and mysteries of prime numbers", category: "Mathematics", creator: "Prof. Michael Chen", credentials: "Professor of Mathematics, Stanford", verified: true, likes: 1800, thumbnail: "🔢" },
+                { id: 3, title: "How Neural Networks Learn", description: "Breaking down the fundamentals of machine learning", category: "Technology", creator: "Dr. Emily Rodriguez", credentials: "PhD in Computer Science, CMU", verified: true, likes: 3200, thumbnail: "💻" },
+                { id: 4, title: "Renaissance Art Techniques", description: "Understanding the methods used by master painters", category: "Art", creator: "James Anderson", credentials: "Master of Fine Arts, RISD", verified: true, likes: 1200, thumbnail: "🎨" },
+                { id: 5, title: "Ocean Ecosystems Explained", description: "The interconnected web of life beneath the waves", category: "Biology", creator: "Dr. Rachel Green", credentials: "PhD in Biology, Oxford", verified: true, likes: 2100, thumbnail: "🌊" }
+            ];
+            const categories = [
+                { name: "Mathematics", icon: "🔢", color: "#3b82f6" },
+                { name: "Science", icon: "⚛️", color: "#10b981" },
+                { name: "Technology", icon: "💻", color: "#a855f7" },
+                { name: "Art", icon: "🎨", color: "#f97316" },
+                { name: "Philosophy", icon: "🧠", color: "#ef4444" },
+                { name: "History", icon: "📚", color: "#d97706" },
+                { name: "Literature", icon: "📖", color: "#6366f1" },
+                { name: "Engineering", icon: "⚙️", color: "#06b6d4" },
+                { name: "Nature", icon: "🌿", color: "#059669" },
+                { name: "Astronomy", icon: "✨", color: "#9333ea" },
+                { name: "Chemistry", icon: "🧪", color: "#14b8a6" },
+                { name: "Biology", icon: "🦠", color: "#047857" }
+            ];
+            const currentVideo = videos[currentVideoIndex];
+            return (
+                <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: '#f3f4f6' }}>
+                    <div style={{ flex: 1, overflow: 'hidden' }}>
+                        {currentTab === 'feed' && (
+                            <div style={{ height: '100%', background: '#000', position: 'relative' }}>
+                                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(to bottom, #111827, #000)' }}>
+                                    <div style={{ fontSize: '8rem', animation: 'pulse 2s infinite' }}>{currentVideo.thumbnail}</div>
+                                </div>
+                                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent, transparent, rgba(0,0,0,0.8))', opacity: 0.8 }}></div>
+                                <div style={{ position: 'absolute', top: '2rem', right: '1rem', zIndex: 10 }}>
+                                    <div style={{ background: 'rgba(0,0,0,0.5)', padding: '0.5rem 1rem', borderRadius: '9999px', color: 'white', fontSize: '0.875rem', backdropFilter: 'blur(4px)' }}>All Categories ▼</div>
+                                </div>
+                                <div style={{ position: 'absolute', bottom: '5rem', left: 0, right: 0, padding: '1.5rem', zIndex: 10 }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                                        <div style={{ flex: 1, marginRight: '1rem' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.75rem', cursor: 'pointer' }}>
+                                                <div style={{ width: '2.5rem', height: '2.5rem', borderRadius: '50%', background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', marginRight: '0.75rem', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}>{currentVideo.creator[0]}</div>
+                                                <div>
+                                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                        <span style={{ color: 'white', fontWeight: 600 }}>{currentVideo.creator}</span>
+                                                        {currentVideo.verified && <span style={{ color: '#60a5fa', marginLeft: '0.25rem' }}>✓</span>}
+                                                    </div>
+                                                    <p style={{ color: 'white', fontSize: '0.75rem', opacity: 0.8 }}>{currentVideo.credentials}</p>
+                                                </div>
+                                            </div>
+                                            <h2 style={{ color: 'white', fontWeight: 600, fontSize: '1.125rem', marginBottom: '0.25rem' }}>{currentVideo.title}</h2>
+                                            <p style={{ color: 'white', fontSize: '0.875rem', opacity: 0.9, marginBottom: '0.5rem', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{currentVideo.description}</p>
+                                            <span style={{ display: 'inline-block', background: '#3b82f6', color: 'white', fontSize: '0.75rem', padding: '0.25rem 0.75rem', borderRadius: '9999px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}>{currentVideo.category}</span>
+                                        </div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
+                                            <button onClick={() => setLikedVideos(p => p.includes(currentVideo.id) ? p.filter(i => i !== currentVideo.id) : [...p, currentVideo.id])} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                                <div style={{ fontSize: '2rem', transition: 'transform 0.2s', color: likedVideos.includes(currentVideo.id) ? '#ef4444' : 'white' }}>{likedVideos.includes(currentVideo.id) ? '❤️' : '🤍'}</div>
+                                                <span style={{ color: 'white', fontSize: '0.75rem', marginTop: '0.25rem', fontWeight: 600 }}>{(currentVideo.likes + (likedVideos.includes(currentVideo.id) ? 1 : 0)).toLocaleString()}</span>
+                                            </button>
+                                            <button onClick={() => setSavedVideos(p => p.includes(currentVideo.id) ? p.filter(i => i !== currentVideo.id) : [...p, currentVideo.id])} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                                <div style={{ fontSize: '2rem', transition: 'transform 0.2s', color: savedVideos.includes(currentVideo.id) ? '#facc15' : 'white' }}>{savedVideos.includes(currentVideo.id) ? '🔖' : '📑'}</div>
+                                                <span style={{ color: 'white', fontSize: '0.75rem', marginTop: '0.25rem', fontWeight: 600 }}>Save</span>
+                                            </button>
+                                            <button style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                                <div style={{ fontSize: '2rem', color: 'white' }}>↗️</div>
+                                                <span style={{ color: 'white', fontSize: '0.75rem', marginTop: '0.25rem', fontWeight: 600 }}>Share</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem', gap: '1rem' }}>
+                                        <button onClick={() => setCurrentVideoIndex(p => (p - 1 + videos.length) % videos.length)} style={{ color: 'white', background: 'rgba(0,0,0,0.4)', padding: '0.5rem 1rem', borderRadius: '9999px', fontSize: '0.875rem', backdropFilter: 'blur(4px)', border: 'none', cursor: 'pointer' }}>⬇️ Prev</button>
+                                        <button onClick={() => setCurrentVideoIndex(p => (p + 1) % videos.length)} style={{ color: 'white', background: 'rgba(0,0,0,0.4)', padding: '0.5rem 1rem', borderRadius: '9999px', fontSize: '0.875rem', backdropFilter: 'blur(4px)', border: 'none', cursor: 'pointer' }}>Next ⬆️</button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        {currentTab === 'categories' && (
+                            <div style={{ height: '100%', background: 'white', overflowY: 'auto', padding: '1rem', paddingTop: '3rem' }}>
+                                <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>Explore Categories</h1>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', paddingBottom: '1rem' }}>
+                                    {categories.map((cat, i) => (
+                                        <div key={i} style={{ background: cat.color, borderRadius: '1rem', padding: '1.5rem', textAlign: 'center', cursor: 'pointer', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', transition: 'transform 0.3s' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}>
+                                            <div style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>{cat.icon}</div>
+                                            <h3 style={{ color: 'white', fontWeight: 600 }}>{cat.name}</h3>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        {currentTab === 'social' && (
+                            <div style={{ height: '100%', background: 'white', overflowY: 'auto' }}>
+                                <div style={{ padding: '1.5rem', paddingTop: '3rem' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                                        <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>Social</h1>
+                                        <button style={{ width: '2.5rem', height: '2.5rem', background: '#3b82f6', color: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', border: 'none', cursor: 'pointer', fontSize: '1.5rem' }}>+</button>
+                                    </div>
+                                    <div style={{ display: 'flex', marginBottom: '1.5rem', borderBottom: '1px solid #e5e7eb', gap: '1rem' }}>
+                                        <button style={{ paddingBottom: '0.5rem', borderBottom: '2px solid #3b82f6', fontWeight: 600, color: '#3b82f6', background: 'none', border: 'none', cursor: 'pointer' }}>Following</button>
+                                        <button style={{ paddingBottom: '0.5rem', color: '#4b5563', background: 'none', border: 'none', cursor: 'pointer' }}>Friends</button>
+                                    </div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                        {videos.slice(0, 3).map(v => (
+                                            <div key={v.id} style={{ background: 'white', borderRadius: '0.75rem', padding: '1rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', border: '1px solid #e5e7eb' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                        <div style={{ width: '3rem', height: '3rem', borderRadius: '50%', background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', marginRight: '0.75rem' }}>{v.creator[0]}</div>
+                                                        <div>
+                                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                                <span style={{ fontWeight: 600 }}>{v.creator}</span>
+                                                                <span style={{ color: '#3b82f6', marginLeft: '0.25rem' }}>✓</span>
+                                                            </div>
+                                                            <p style={{ fontSize: '0.875rem', color: '#4b5563' }}>{v.credentials}</p>
+                                                        </div>
+                                                    </div>
+                                                    <button onClick={() => setFollowing(p => p.includes(v.creator) ? p.filter(c => c !== v.creator) : [...p, v.creator])} style={{ padding: '0.5rem 1rem', borderRadius: '0.5rem', fontSize: '0.875rem', fontWeight: 600, background: following.includes(v.creator) ? '#e5e7eb' : '#3b82f6', color: following.includes(v.creator) ? '#374151' : 'white', border: 'none', cursor: 'pointer' }}>{following.includes(v.creator) ? 'Following' : 'Follow'}</button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        {currentTab === 'profile' && (
+                            <div style={{ height: '100%', background: 'white', overflowY: 'auto' }}>
+                                <div style={{ padding: '1.5rem', paddingTop: '3rem' }}>
+                                    <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>Profile</h1>
+                                    <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                                        <div style={{ width: '6rem', height: '6rem', borderRadius: '50%', background: 'linear-gradient(135deg, #3b82f6, #a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '2.25rem', fontWeight: 'bold', margin: '0 auto 1rem', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>U</div>
+                                        <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>testuser</h2>
+                                        <p style={{ color: '#4b5563' }}>test@example.com</p>
+                                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem', gap: '2rem' }}>
+                                            <div style={{ textAlign: 'center' }}><div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{savedVideos.length}</div><div style={{ fontSize: '0.875rem', color: '#4b5563' }}>Saved</div></div>
+                                            <div style={{ textAlign: 'center' }}><div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{following.length}</div><div style={{ fontSize: '0.875rem', color: '#4b5563' }}>Following</div></div>
+                                            <div style={{ textAlign: 'center' }}><div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>0</div><div style={{ fontSize: '0.875rem', color: '#4b5563' }}>Friends</div></div>
+                                        </div>
+                                        <button style={{ marginTop: '1.5rem', width: '100%', background: '#f3f4f6', color: '#374151', padding: '0.75rem', borderRadius: '0.5rem', fontWeight: 600, border: 'none', cursor: 'pointer' }}>Edit Profile</button>
+                                    </div>
+                                    <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: '1.5rem' }}>
+                                        <h3 style={{ fontWeight: 600, marginBottom: '1rem' }}>Saved Videos</h3>
+                                        {savedVideos.length === 0 ? (
+                                            <div style={{ textAlign: 'center', padding: '2rem 0', color: '#6b7280' }}>
+                                                <div style={{ fontSize: '3rem', opacity: 0.5, marginBottom: '0.5rem' }}>📑</div>
+                                                <p style={{ fontWeight: 500 }}>No saved videos yet</p>
+                                                <p style={{ fontSize: '0.875rem' }}>Videos you save will appear here</p>
+                                            </div>
+                                        ) : (
+                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+                                                {videos.filter(v => savedVideos.includes(v.id)).map(v => (
+                                                    <div key={v.id} style={{ aspectRatio: '9/16', background: 'linear-gradient(135deg, #e5e7eb, #d1d5db)', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.25rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', cursor: 'pointer' }}>{v.thumbnail}</div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div style={{ borderTop: '1px solid #e5e7eb', marginTop: '1.5rem', paddingTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                        <button style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', borderRadius: '0.5rem', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left' }}><span>🔔 Notifications</span><span style={{ color: '#9ca3af' }}>›</span></button>
+                                        <button style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', borderRadius: '0.5rem', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left' }}><span>🔒 Privacy</span><span style={{ color: '#9ca3af' }}>›</span></button>
+                                        <button style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', borderRadius: '0.5rem', background: 'transparent', border: 'none', cursor: 'pointer', textAlign: 'left' }}><span>❓ Help & Support</span><span style={{ color: '#9ca3af' }}>›</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    <div style={{ background: 'white', borderTop: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-around', padding: '0.75rem 1rem', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}>
+                        <button onClick={() => setCurrentTab('feed')} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', color: currentTab === 'feed' ? '#2563eb' : '#6b7280' }}><div style={{ fontSize: '1.5rem' }}>🏠</div><span style={{ fontSize: '0.75rem', marginTop: '0.25rem', fontWeight: 500 }}>Discover</span></button>
+                        <button onClick={() => setCurrentTab('categories')} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', color: currentTab === 'categories' ? '#2563eb' : '#6b7280' }}><div style={{ fontSize: '1.5rem' }}>📊</div><span style={{ fontSize: '0.75rem', marginTop: '0.25rem', fontWeight: 500 }}>Categories</span></button>
+                        <button onClick={() => setCurrentTab('social')} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', color: currentTab === 'social' ? '#2563eb' : '#6b7280' }}><div style={{ fontSize: '1.5rem' }}>👥</div><span style={{ fontSize: '0.75rem', marginTop: '0.25rem', fontWeight: 500 }}>Social</span></button>
+                        <button onClick={() => setCurrentTab('profile')} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', color: currentTab === 'profile' ? '#2563eb' : '#6b7280' }}><div style={{ fontSize: '1.5rem' }}>👤</div><span style={{ fontSize: '0.75rem', marginTop: '0.25rem', fontWeight: 500 }}>Profile</span></button>
+                    </div>
+                </div>
+            );
+        }
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<MindMotionApp />);
+    </script>
+</body>
+</html>
