@@ -83,7 +83,7 @@
                     <p class="demo-label">Swipe or drag to navigate between screens</p>
                 </div>
 
-                <!-- Design Gallery Demo -->
+                <!-- Design Gallery Demo --> 
                 <div id="designGallery" style="display: none;">
                     <div class="design-gallery-container">
                         <button class="gallery-nav gallery-nav-left" onclick="navigateGallery(-1)">←</button>
@@ -92,41 +92,61 @@
                             <div id="galleryTrack" class="gallery-track">
                                 <!-- Original Gallery items -->
                                 <div class="gallery-item">
-                                    <div class="gallery-placeholder"><span>Logo Design</span></div>
+                                    <img src="assets/design/noctlogo.png" alt="Logo Design" class="gallery-image">
                                 </div>
                                 <div class="gallery-item">
-                                    <div class="gallery-placeholder"><span>Website Mockup</span></div>
+                                    <div class="gallery-placeholder">
+                                        <span>--</span>
+                                    </div>
                                 </div>
                                 <div class="gallery-item">
-                                    <div class="gallery-placeholder"><span>Brand Identity</span></div>
+                                    <div class="gallery-placeholder">
+                                        <span>--</span>
+                                    </div>
                                 </div>
                                 <div class="gallery-item">
-                                    <div class="gallery-placeholder"><span>Digital Illustration</span></div>
+                                    <div class="gallery-placeholder">
+                                        <span>--</span>
+                                    </div>
                                 </div>
                                 <div class="gallery-item">
-                                    <div class="gallery-placeholder"><span>Social Media Graphics</span></div>
+                                    <div class="gallery-placeholder">
+                                        <span>--</span>
+                                    </div>
                                 </div>
                                 <div class="gallery-item">
-                                    <div class="gallery-placeholder"><span>Presentation Design</span></div>
+                                    <div class="gallery-placeholder">
+                                        <span>--</span>
+                                    </div>
                                 </div>
                                 <!-- Duplicated items for seamless loop -->
                                 <div class="gallery-item">
-                                    <div class="gallery-placeholder"><span>Logo Design</span></div>
+                                    <img src="assets/design/noctlogo.png" alt="Logo Design" class="gallery-image">
                                 </div>
                                 <div class="gallery-item">
-                                    <div class="gallery-placeholder"><span>Website Mockup</span></div>
+                                    <div class="gallery-placeholder">
+                                        <span>--</span>
+                                    </div>
                                 </div>
                                 <div class="gallery-item">
-                                    <div class="gallery-placeholder"><span>Brand Identity</span></div>
+                                    <div class="gallery-placeholder">
+                                        <span>--</span>
+                                    </div>
                                 </div>
                                 <div class="gallery-item">
-                                    <div class="gallery-placeholder"><span>Digital Illustration</span></div>
+                                    <div class="gallery-placeholder">
+                                        <span>--</span>
+                                    </div>
                                 </div>
                                 <div class="gallery-item">
-                                    <div class="gallery-placeholder"><span>Social Media Graphics</span></div>
+                                    <div class="gallery-placeholder">
+                                        <span>--</span>
+                                    </div>
                                 </div>
                                 <div class="gallery-item">
-                                    <div class="gallery-placeholder"><span>Presentation Design</span></div>
+                                    <div class="gallery-placeholder">
+                                        <span>--</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -172,19 +192,20 @@
     <div id="contactModal" class="modal-overlay" onclick="closeContactModal(event)">
         <div class="modal" onclick="event.stopPropagation()">
             <h2>Get in Touch</h2>
-            <form onsubmit="submitContact(event)">
+            <form action="https://formspree.io/f/xbdzjdzp" method="POST" id="contactForm">
                 <div class="form-group">
                     <label>Name</label>
-                    <input type="text" id="contactName" required>
+                    <input type="text" id="contactName" name="name" required>
                 </div>
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" id="contactEmail" required>
+                    <input type="email" id="contactEmail" name="email" required>
                 </div>
                 <div class="form-group">
                     <label>Message</label>
-                    <textarea id="contactMessage" required></textarea>
+                    <textarea id="contactMessage" name="message" required></textarea>
                 </div>
+                <div id="formStatus" style="display: none; margin: 15px 0; padding: 10px; border-radius: 8px; text-align: center;"></div>
                 <div class="modal-buttons">
                     <button type="button" class="cancel-button" onclick="closeContactModal()">Cancel</button>
                     <button type="submit" class="submit-button">Send Message</button>
@@ -192,7 +213,6 @@
             </form>
         </div>
     </div>
-
     <script>
         // Project data
         const projects = {

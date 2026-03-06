@@ -992,10 +992,30 @@ body {
     padding: 0 20px;
 }
 
+/* Container for each gallery item - NO styling here */
 .gallery-item {
     min-width: 400px;
     height: 500px;
     flex-shrink: 0;
+}
+
+/* Styling for actual images - ALL styling HERE */
+.gallery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;  /* Shows entire logo without cropping */
+    padding: 20px;        /* Space around logo */
+    background: white;    /* Clean white background */
+    border-radius: 16px;
+    border: 2px solid rgba(139, 92, 246, 0.2);
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.gallery-image:hover {
+    border-color: #8B5CF6;
+    transform: scale(1.02);
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
 }
 
 .gallery-placeholder {
