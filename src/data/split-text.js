@@ -1,10 +1,8 @@
-import { createTimeline, stagger, splitText } from 'https://esm.sh/animejs';
+export async function runMyAnimation() {
+  if (!document.querySelector('.animated-text')) return;
 
-export function runMyAnimation() {
-  if (!document.querySelector('.animated-text')) {
-    console.warn("Waiting for .animated-text to render...");
-    return;
-  }
+  // This forces Vite to completely ignore the file until you are physically on the animation page!
+  const { createTimeline, stagger, splitText } = await import('https://esm.sh/animejs');
 
   const { words, chars } = splitText('.animated-text', {
     words: { wrap: 'clip' },
