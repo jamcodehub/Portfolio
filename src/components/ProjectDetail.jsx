@@ -17,7 +17,7 @@ export default function ProjectDetail() {
     requestAnimationFrame(() => {
       animate({
         targets: '.project-detail h1, .project-detail .category-tag, .project-detail .project-content, .project-detail .demo-section',
-        opacity: [0, 1], translateY: [16, 0],
+        translateY: [16, 0],
         delay: stagger(80), duration: 500, easing: 'easeOutQuad',
       });
     });

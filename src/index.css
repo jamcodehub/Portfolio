@@ -377,10 +377,3 @@ body {
   .le-products-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* ── Fix: ensure elements are visible if animation doesn't fire ── */
-.header-content { opacity: 1; }
-.category-card { opacity: 1; }
-.project-detail h1,
-.project-detail .category-tag,
-.project-detail .project-content,
-.project-detail .demo-section { opacity: 1; }

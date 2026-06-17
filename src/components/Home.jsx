@@ -13,12 +13,12 @@ export default function Home() {
   useEffect(() => {
     animate({
       targets: '.header-content',
-      opacity: [0, 1], translateY: [-10, 0],
+      translateY: [-10, 0],
       duration: 600, easing: 'easeOutQuad',
     });
     animate({
       targets: '.category-card',
-      opacity: [0, 1], translateY: [20, 0],
+      translateY: [20, 0],
       delay: stagger(80),
       duration: 500, easing: 'easeOutQuad',
     });
