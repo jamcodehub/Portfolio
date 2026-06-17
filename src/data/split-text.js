@@ -1,23 +1,38 @@
-export async function runMyAnimation() {
-  if (!document.querySelector('.animated-text')) return;
+import React, { useEffect } from 'react';
 
-  // This forces Vite to completely ignore the file until you are physically on the animation page!
-  const { createTimeline, stagger, splitText } = await import('https://esm.sh/animejs');
+export default function Animation() {
+  
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes jump {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+      }
+      .fallback-letter {
+        display: inline-block;
+        animation: jump 0.65s ease-in-out infinite;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
 
-  const { words, chars } = splitText('.animated-text', {
-    words: { wrap: 'clip' },
-    chars: true,
-  });
+  const text = "ANIMATION";
 
-  createTimeline({
-    loop: true,
-    defaults: { ease: 'inOut(3)', duration: 650 }
-  })
-  .add(words, {
-    y: el => +el.dataset.line % 2 ? '100%' : '-100%',
-  }, stagger(125))
-  .add(chars, {
-    y: el => +el.dataset.line % 2 ? '100%' : '-100%',
-  }, stagger(10, { from: 'random' }))
-  .init();
+  return (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px', background: '#111' }}>
+      <h1 style={{ color: '#8b5cf6', fontSize: '5rem', fontWeight: 'bold' }}>
+        {text.split("").map((char, index) => (
+          <span 
+            key={index} 
+            className="fallback-letter" 
+            style={{ animationDelay: `${index * 50}ms` }}
+          >
+            {char}
+          </span>
+        ))}
+      </h1>
+    </div>
+  );
 }
