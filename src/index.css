@@ -377,19 +377,10 @@ body {
   .le-products-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* ── Anime.js V4 SplitText Layout Fixes ── */
-
-/* Prevents characters from leaking out of their bounding box during the clip layout */
-.animated-text .anime-word-wrapper {
-  display: inline-block;
-  position: relative;
-  overflow: hidden; 
-  vertical-align: bottom;
-}
-
-/* Style for individual character spans generated dynamically by Anime.js V4 */
-.animated-text .anime-char-wrapper {
-  display: inline-block;
-  position: relative;
-  will-change: transform, opacity;
-}
+/* ── Fix: ensure elements are visible if animation doesn't fire ── */
+.header-content { opacity: 1; }
+.category-card { opacity: 1; }
+.project-detail h1,
+.project-detail .category-tag,
+.project-detail .project-content,
+.project-detail .demo-section { opacity: 1; }
