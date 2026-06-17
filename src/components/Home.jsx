@@ -48,7 +48,7 @@ export default function Home() {
           <header className="header">
             <div className="header-content">
               <div className="profile-circle">
-                <img src="/assets/imgs/james.png" alt="Profile" className="profile-image" />
+                <img src="public/assets/imgs/james.png" alt="Profile" className="profile-image" />
               </div>
               <div className="header-text">
                 <h1

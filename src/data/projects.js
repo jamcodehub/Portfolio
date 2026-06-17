@@ -115,6 +115,12 @@ export const projects = {
       hasDemo: 'lumen',
     },
   ],
+    Animation: [
+    {
+      name: 'Animation',
+      category: 'Animation',
+    },
+  ],
 };
 
 export const categories = [
