@@ -4,7 +4,6 @@ import { runMyAnimation } from '../data/split-text.js';
 export default function Animation() {
   
   useEffect(() => {
-
     runMyAnimation();
   }, []); 
 
@@ -15,9 +14,9 @@ export default function Animation() {
       alignItems: 'center', 
       minHeight: '400px', 
       background: '#111',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      borderRadius: '24px'
     }}>
-      {/* */}
       <p className="animated-text" style={{ 
         fontSize: '5rem', 
         fontWeight: 'bold', 
