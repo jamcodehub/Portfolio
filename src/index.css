@@ -376,3 +376,20 @@ body {
   .gallery-item { min-width: 280px; }
   .le-products-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* ── Anime.js V4 SplitText Layout Fixes ── */
+
+/* Prevents characters from leaking out of their bounding box during the clip layout */
+.animated-text .anime-word-wrapper {
+  display: inline-block;
+  position: relative;
+  overflow: hidden; 
+  vertical-align: bottom;
+}
+
+/* Style for individual character spans generated dynamically by Anime.js V4 */
+.animated-text .anime-char-wrapper {
+  display: inline-block;
+  position: relative;
+  will-change: transform, opacity;
+}
