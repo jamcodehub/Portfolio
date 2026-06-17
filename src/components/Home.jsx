@@ -1,4 +1,4 @@
-import { animate, stagger } from 'animejs';
+import { animate, createScope, stagger } from 'animejs';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { categories, projects } from '../data/projects';
@@ -7,21 +7,23 @@ import ContactModal from './ContactModal';
 export default function Home() {
   const [showContact, setShowContact] = useState(false);
   const navigate = useNavigate();
+  const root = useRef(null);
+  const scope = useRef(null);
   const h1Ref = useRef(null);
   const pRef = useRef(null);
 
   useEffect(() => {
-    animate({
-      targets: '.header-content',
-      translateY: [-10, 0],
-      duration: 600, easing: 'easeOutQuad',
+    scope.current = createScope({ root }).add(() => {
+      animate('.header-content', {
+        translateY: [-10, 0], opacity: [0, 1],
+        duration: 600, ease: 'outQuad',
+      });
+      animate('.category-card', {
+        translateY: [20, 0], opacity: [0, 1],
+        delay: stagger(80), duration: 500, ease: 'outQuad',
+      });
     });
-    animate({
-      targets: '.category-card',
-      translateY: [20, 0],
-      delay: stagger(80),
-      duration: 500, easing: 'easeOutQuad',
-    });
+    return () => scope.current.revert();
   }, []);
 
   function handleMouseMove(e, ref) {
@@ -36,7 +38,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="home-view">
+      <div ref={root} className="home-view">
         <div className="container">
           <header className="header">
             <div className="header-content">
