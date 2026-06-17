@@ -1,0 +1,125 @@
+export const projects = {
+  prompt: [
+    {
+      name: 'StepQuest',
+      category: 'Prompt Engineering',
+      description: 'A comprehensive fitness tracking app built through iterative AI-assisted development, taking over 200+ prompt messages to reach a stable, production-ready state.',
+      features: [
+        'Apple Watch integration for real-time step tracking',
+        'AI fitness coaching using Claude API',
+        'Leveling system and gamification mechanics',
+        'Social features with friends and teams',
+        'Loot box system with cosmetic rewards',
+        'Premium subscription model',
+      ],
+      hasDemo: 'stepquest',
+      promptingTechniques: [
+        'Started with comprehensive requirements documentation before any coding',
+        'Provided complete code files for review rather than fragments',
+        'Used iterative testing — implemented features step-by-step, testing before moving forward',
+        'Asked clarifying questions when uncertain instead of assuming',
+        'Maintained clear context by referencing previous work and decisions',
+        'Broke complex features into manageable chunks (base avatar, then customization, then loot boxes)',
+        'Practiced systematic debugging by providing exact error messages and context',
+        'Conducted regular code reviews at project milestones',
+        'Balanced shipping functional features with perfectionism',
+      ],
+    },
+    {
+      name: 'MindMotion',
+      category: 'Prompt Engineering',
+      description: 'An educational video platform designed as an intellectual alternative to TikTok, featuring iOS app and Node.js backend. Currently in proof of concept stage.',
+      features: [
+        'Short-form educational video content',
+        'SwiftUI frontend with smooth animations',
+        'Node.js/Express backend API',
+        'User authentication and profiles',
+        'Content recommendation system',
+        'Cross-platform compatibility',
+      ],
+      hasDemo: 'mindmotion',
+    },
+    {
+      name: 'D&D Survivors',
+      category: 'Prompt Engineering',
+      description: 'Browser-based survival game inspired by Vampire Survivors with four character classes and sophisticated balance mechanics.',
+      features: [
+        'Four unique character classes with distinct abilities',
+        'Wave-based enemy spawning system',
+        'Experience and leveling mechanics',
+        'Balanced progression systems',
+        'Responsive controls and smooth gameplay',
+        'Strategic upgrade choices',
+      ],
+    },
+  ],
+  development: [
+    {
+      name: 'Cyber Security Program',
+      category: 'Program Development',
+      description: 'This project is confidential. Details are available only to internal staff in accordance with company privacy policies.',
+      features: [
+        'React.js — Component-based UI with hooks',
+        'JavaScript/ES6 — Modern programming patterns',
+        'Tailwind CSS — Responsive styling',
+        'Game Mechanics — Educational gameplay design',
+        'Vite — Build tooling',
+        'Electron — Desktop packaging',
+        'Educational Design — Gamifying security concepts for engagement',
+      ],
+      isConfidential: true,
+      promptingTechniques: [
+        'Provided clear requirements upfront with UI/UX needs',
+        'Iterated systematically through features (activity logs, difficulty adjustments)',
+        'Tested each iteration and provided detailed feedback',
+        'Requested complete implementation with deployment instructions',
+      ],
+    },
+  ],
+  graphicDesign: [
+    {
+      name: 'Digital Design Portfolio',
+      category: 'Digital Design',
+      description: 'A showcase of visual design work spanning branding, web design, and digital illustrations.',
+      features: [
+        'Adobe Illustrator — Vector graphics and logo creation',
+        'Adobe Photoshop — Image editing and digital artwork',
+        'Microsoft PowerPoint — Presentation design and visual storytelling',
+        'AI Tools — AI-assisted design and image generation',
+      ],
+      skills: [
+        'Logo Design — Creating brand identities and visual marks',
+        'Website Design — UI/UX mockups and landing page layouts',
+        'Digital Illustration — Character art and concept designs',
+        'Brand Identity — Cohesive visual systems and style guides',
+        'Social Media Graphics — Engaging visual content for platforms',
+        'Presentation Design — Professional slides and infographics',
+        'Typography — Font pairing and text-based design',
+        'Color Theory — Strategic use of color palettes',
+      ],
+      hasDemo: 'gallery',
+    },
+  ],
+  websites: [
+    {
+      name: 'Lumen Elixir',
+      category: 'Websites',
+      description: 'A fantasy-themed e-commerce website for a potion bottle craft shop. Features product filtering, shopping cart functionality, and an enchanted aesthetic.',
+      features: [
+        'E-commerce functionality with shopping cart',
+        'Product filtering and sorting system',
+        'Responsive design for all devices',
+        'Modal-based checkout flow',
+        'Fantasy-themed UI with custom animations',
+      ],
+      hasDemo: 'lumen',
+    },
+  ],
+};
+
+export const categories = [
+  { key: 'prompt',       label: 'Prompt Engineering' },
+  { key: 'development',  label: 'Program Development' },
+  { key: 'graphicDesign',label: 'Digital Design' },
+  { key: 'websites',     label: 'Websites' },
+];
