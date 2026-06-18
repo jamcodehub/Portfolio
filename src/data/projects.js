@@ -1,4 +1,18 @@
 export const projects = {
+  animation: [
+    {
+      name: 'Interactive Animation Showcase',
+      category: 'Animation',
+      description: 'A dedicated interactive canvas demonstrating advanced web animation techniques, state management, and scroll-triggered visual effects.',
+      features: [
+        'Anime.js — Advanced timeline sequencing and keyframes',
+        'React Hooks (useRef, useEffect) — Lifecycle and DOM manipulation',
+        'Scroll-based triggers and dynamic scaling',
+        'Text scrambling and dynamic text splitting',
+      ],
+      hasDemo: 'animation',
+    },
+  ],
   prompt: [
     {
       name: 'StepQuest',
@@ -115,24 +129,12 @@ export const projects = {
       hasDemo: 'lumen',
     },
   ],
-  // 1. Changed from 'Animation:' to lowercase 'animation:' to match the key below
-  animation: [
-    {
-      name: 'Animation Portfolio',
-      category: 'Animation',
-      description: 'A collection of 3D animations, character rigs, and motion designs.', 
-      features: [],
-      skills: [],
-      hasDemo: 'animation', 
-    },
-  ],
 };
 
 export const categories = [
-  { key: 'prompt',        label: 'Prompt Engineering' },
-  { key: 'development',   label: 'Program Development' },
-  { key: 'graphicDesign', label: 'Digital Design' },
-  { key: 'websites',      label: 'Websites' },
-  // 2. Added this row so Home.jsx knows to create the card and find the button!
-  { key: 'animation',     label: 'Animation' }, 
+  { key: 'animation',    label: 'Animation' },
+  { key: 'prompt',       label: 'Prompt Engineering' },
+  { key: 'development',  label: 'Program Development' },
+  { key: 'graphicDesign',label: 'Digital Design' },
+  { key: 'websites',     label: 'Websites' },
 ];
