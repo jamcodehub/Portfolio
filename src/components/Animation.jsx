@@ -2,8 +2,17 @@ import { animate, createScope, stagger, scrambleText, onScroll, splitText } from
 import { useEffect, useRef } from 'react';
 
 export default function Animation() {
-  const root = useRef(null);
-  const scope = useRef(null);
+  const root        = useRef(null);
+  const scope       = useRef(null);
+  const circleRef   = useRef(null);
+  const stackScene  = useRef(null);
+  const revealText  = useRef(null);
+  const scrollTrig  = useRef(null);
+  const leftBall    = useRef(null);
+  const rightBall   = useRef(null);
+  const btnLeft     = useRef(null);
+  const btnRight    = useRef(null);
+  const btnReset    = useRef(null);
 
   useEffect(() => {
     scope.current = createScope({ root }).add(() => {
@@ -32,43 +41,43 @@ export default function Animation() {
         frameRate: 100,
       });
 
-      // ── Circle expands on scroll, synced to scroll position ──
-      animate('.scroll-circle', {
+      // ── Circle expands on scroll ──
+      animate(circleRef.current, {
         scale: [0, 60],
         ease: 'inOut(3)',
         frameRate: 100,
         autoplay: onScroll({
-          target: '.scroll-trigger',
+          target: scrollTrig.current,
           sync: 0.5,
         }),
       });
 
-      // ── Balls fade in once circle reaches ~50% (using onUpdate progress) ──
-      animate('.stack-scene', {
+      // ── Balls fade in between 40–60% scroll progress ──
+      animate(stackScene.current, {
         opacity: [0, 1],
         duration: 1,
         ease: 'linear',
         frameRate: 100,
         autoplay: onScroll({
-          target: '.scroll-trigger',
+          target: scrollTrig.current,
           sync: { start: 0.4, end: 0.6 },
         }),
       });
 
-      // ── Reveal text ──
-      animate('.scroll-reveal-text', {
+      // ── Reveal text fades in between 65–90% ──
+      animate(revealText.current, {
         opacity: [0, 1],
-        ease: 'linear',
         duration: 1,
+        ease: 'linear',
         frameRate: 100,
         autoplay: onScroll({
-          target: '.scroll-trigger',
-          sync: { start: 0.6, end: 0.9 },
+          target: scrollTrig.current,
+          sync: { start: 0.65, end: 0.9 },
         }),
       });
 
       // ── splitText reveal ──
-      const split = splitText('.scroll-reveal-text', {
+      const split = splitText(revealText.current, {
         words: { wrap: 'clip' },
       });
       split.addEffect((self) => animate(self.words, {
@@ -82,7 +91,7 @@ export default function Animation() {
       // ── Button-controlled stacking ──
       const dur = 500;
 
-      const leftAnim = animate('.stack-left', {
+      const leftAnim = animate(leftBall.current, {
         translateX: { to: 65, ease: 'outQuad' },
         translateY: [
           { to: -80, ease: 'outQuad', duration: dur * 0.5 },
@@ -92,14 +101,14 @@ export default function Animation() {
         frameRate: 100,
         autoplay: false,
         onComplete: () => {
-          const btnL = document.querySelector('.stack-btn-left');
-          const btnR = document.querySelector('.stack-btn-right');
-          if (btnL) { btnL.style.opacity = '0'; btnL.style.pointerEvents = 'none'; }
-          if (btnR) { btnR.style.opacity = '1'; btnR.style.pointerEvents = 'auto'; }
+          btnLeft.current.style.opacity = '0';
+          btnLeft.current.style.pointerEvents = 'none';
+          btnRight.current.style.opacity = '1';
+          btnRight.current.style.pointerEvents = 'auto';
         },
       });
 
-      const rightAnim = animate('.stack-right', {
+      const rightAnim = animate(rightBall.current, {
         translateX: { to: -65, ease: 'outQuad' },
         translateY: [
           { to: -150, ease: 'outQuad', duration: dur * 0.5 },
@@ -109,25 +118,21 @@ export default function Animation() {
         frameRate: 100,
         autoplay: false,
         onComplete: () => {
-          const btnR = document.querySelector('.stack-btn-right');
-          const btnReset = document.querySelector('.stack-btn-reset');
-          if (btnR) { btnR.style.opacity = '0'; btnR.style.pointerEvents = 'none'; }
-          if (btnReset) { btnReset.style.opacity = '1'; btnReset.style.pointerEvents = 'auto'; }
+          btnRight.current.style.opacity = '0';
+          btnRight.current.style.pointerEvents = 'none';
+          btnReset.current.style.opacity = '1';
+          btnReset.current.style.pointerEvents = 'auto';
         },
       });
 
-      const btnLeft  = document.querySelector('.stack-btn-left');
-      const btnRight = document.querySelector('.stack-btn-right');
-      const btnReset = document.querySelector('.stack-btn-reset');
-
-      if (btnLeft)  btnLeft.addEventListener('click',  () => leftAnim.restart());
-      if (btnRight) btnRight.addEventListener('click', () => rightAnim.restart());
-      if (btnReset) btnReset.addEventListener('click', () => {
+      btnLeft.current.addEventListener('click',  () => leftAnim.restart());
+      btnRight.current.addEventListener('click', () => rightAnim.restart());
+      btnReset.current.addEventListener('click', () => {
         leftAnim.revert();
         rightAnim.revert();
-        if (btnLeft)  { btnLeft.style.opacity  = '1'; btnLeft.style.pointerEvents  = 'auto'; }
-        if (btnRight) { btnRight.style.opacity = '0'; btnRight.style.pointerEvents = 'none'; }
-        if (btnReset) { btnReset.style.opacity = '0'; btnReset.style.pointerEvents = 'none'; }
+        btnLeft.current.style.opacity  = '1'; btnLeft.current.style.pointerEvents  = 'auto';
+        btnRight.current.style.opacity = '0'; btnRight.current.style.pointerEvents = 'none';
+        btnReset.current.style.opacity = '0'; btnReset.current.style.pointerEvents = 'none';
       });
 
     });
@@ -138,12 +143,9 @@ export default function Animation() {
   const btnStyle = {
     background: 'rgba(255,255,255,0.15)',
     border: '1px solid rgba(255,255,255,0.3)',
-    color: '#fff',
-    borderRadius: '20px',
-    padding: '6px 18px',
-    fontSize: '0.75rem',
-    letterSpacing: '2px',
-    cursor: 'pointer',
+    color: '#fff', borderRadius: '20px',
+    padding: '6px 18px', fontSize: '0.75rem',
+    letterSpacing: '2px', cursor: 'pointer',
     transition: 'opacity 0.3s ease, background 0.2s ease',
     fontFamily: 'Space Mono, monospace',
   };
@@ -165,9 +167,7 @@ export default function Animation() {
               fontSize: 'clamp(3rem, 8vw, 6rem)',
               fontWeight: 'bold', color: '#8b5cf6',
               letterSpacing: '4px', margin: '0 2px',
-            }}>
-              {char}
-            </span>
+            }}>{char}</span>
           ))}
         </div>
 
@@ -186,7 +186,7 @@ export default function Animation() {
       </div>
 
       {/* ── Scroll Section ── */}
-      <div className="scroll-trigger" style={{
+      <div ref={scrollTrig} style={{
         height: '300vh', background: '#111', position: 'relative',
       }}>
         <div style={{
@@ -195,8 +195,9 @@ export default function Animation() {
           alignItems: 'center', justifyContent: 'center',
           overflow: 'hidden', gap: '60px',
         }}>
+
           {/* Expanding circle */}
-          <div className="scroll-circle" style={{
+          <div ref={circleRef} style={{
             width: '80px', height: '80px', borderRadius: '50%',
             background: '#2e2a36',
             position: 'absolute',
@@ -206,41 +207,39 @@ export default function Animation() {
             zIndex: 1,
           }} />
 
-          {/* Balls + buttons — fade in via scroll */}
-          <div className="stack-scene" style={{
-            position: 'relative', zIndex: 2,
-            opacity: 0,
+          {/* Balls + buttons */}
+          <div ref={stackScene} style={{
+            position: 'relative', zIndex: 2, opacity: 0,
             display: 'flex', flexDirection: 'column',
             alignItems: 'center', gap: '20px',
           }}>
             <div style={{
               display: 'flex', alignItems: 'flex-end',
-              justifyContent: 'center',
-              height: '180px', position: 'relative',
+              justifyContent: 'center', height: '180px',
             }}>
-              <div className="stack-left" style={{
+              <div ref={leftBall} style={{
                 width: '50px', height: '50px', borderRadius: '50%',
                 background: '#ffffff', margin: '0 8px', flexShrink: 0,
               }} />
-              <div className="stack-mid" style={{
+              <div style={{
                 width: '50px', height: '50px', borderRadius: '50%',
                 background: '#ffffff', margin: '0 8px', flexShrink: 0,
               }} />
-              <div className="stack-right" style={{
+              <div ref={rightBall} style={{
                 width: '50px', height: '50px', borderRadius: '50%',
                 background: '#ffffff', margin: '0 8px', flexShrink: 0,
               }} />
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
-              <button className="stack-btn-left"  style={{ ...btnStyle, opacity: 1 }}>→</button>
-              <button className="stack-btn-reset" style={{ ...btnStyle, opacity: 0, pointerEvents: 'none' }}>↺</button>
-              <button className="stack-btn-right" style={{ ...btnStyle, opacity: 0, pointerEvents: 'none' }}>←</button>
+              <button ref={btnLeft}  style={{ ...btnStyle, opacity: 1 }}>→</button>
+              <button ref={btnReset} style={{ ...btnStyle, opacity: 0, pointerEvents: 'none' }}>↺</button>
+              <button ref={btnRight} style={{ ...btnStyle, opacity: 0, pointerEvents: 'none' }}>←</button>
             </div>
           </div>
 
           {/* Reveal text */}
-          <p className="scroll-reveal-text" style={{
+          <p ref={revealText} style={{
             position: 'relative', zIndex: 2,
             fontSize: 'clamp(1.5rem, 4vw, 3rem)', fontWeight: 'bold',
             color: '#ffffff', letterSpacing: '4px',
@@ -256,9 +255,7 @@ export default function Animation() {
           0%, 100% { opacity: 0.3; transform: translateY(0); }
           50% { opacity: 1; transform: translateY(8px); }
         }
-        .stack-btn-left:hover, .stack-btn-right:hover, .stack-btn-reset:hover {
-          background: rgba(255,255,255,0.25) !important;
-        }
+        button:hover { background: rgba(255,255,255,0.25) !important; }
       `}</style>
     </div>
   );
