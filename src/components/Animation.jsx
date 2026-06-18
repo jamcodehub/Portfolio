@@ -1,5 +1,5 @@
 import { animate, createScope, stagger, scrambleText, onScroll, splitText } from 'animejs';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function Animation() {
   const root = useRef(null);
@@ -20,7 +20,7 @@ export default function Animation() {
         frameRate: 100,
       });
 
-      // ── Scramble text ──
+      // ── Scramble text — plays once and stays ──
       animate('.anim-scramble', {
         innerHTML: scrambleText({
           chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
@@ -32,7 +32,7 @@ export default function Animation() {
         frameRate: 100,
       });
 
-      // ── Scroll: circle expands to fill screen ──
+      // ── Circle expands on scroll ──
       animate('.scroll-circle', {
         scale: [0, 60],
         ease: 'inOut(3)',
@@ -40,6 +40,19 @@ export default function Animation() {
         autoplay: onScroll({
           target: '.scroll-trigger',
           sync: 0.5,
+        }),
+      });
+
+      // ── Balls + buttons fade in once circle reaches ~50% ──
+      animate('.stack-scene', {
+        opacity: [0, 1],
+        ease: 'inOut(2)',
+        frameRate: 100,
+        autoplay: onScroll({
+          target: '.scroll-trigger',
+          sync: 0.5,
+          enter: '40% bottom',
+          leave: '70% bottom',
         }),
       });
 
@@ -68,60 +81,76 @@ export default function Animation() {
         frameRate: 100,
       }));
 
-      // ── Stacking circles animation (loops) ──
-      const stackLoop = () => {
-        const dur = 500;
-        const ease = 'outQuad';
+      // ── Button-controlled stacking ──
+      const dur = 500;
 
-        // Reset positions
-        animate('.stack-left', {
-          translateX: 0, translateY: 0, scale: 1, opacity: 1,
-          duration: 0,
-        });
-        animate('.stack-right', {
-          translateX: 0, translateY: 0, scale: 1, opacity: 1,
-          duration: 0,
-        });
-        animate('.stack-mid', {
-          translateY: 0, scale: 1,
-          duration: 0,
-        });
+      const leftAnim = animate('.stack-left', {
+        translateX: { to: 60, ease: 'outQuad' },
+        translateY: [
+          { to: -55, ease: 'outQuad', duration: dur * 0.5 },
+          { to: -30, ease: 'inQuad', duration: dur * 0.5 },
+        ],
+        duration: dur,
+        frameRate: 100,
+        autoplay: false,
+        onComplete: () => {
+          // hide left btn, show right btn
+          const btnL = document.querySelector('.stack-btn-left');
+          const btnR = document.querySelector('.stack-btn-right');
+          if (btnL) { btnL.style.opacity = '0'; btnL.style.pointerEvents = 'none'; }
+          if (btnR) { btnR.style.opacity = '1'; btnR.style.pointerEvents = 'auto'; }
+        },
+      });
 
-        // Step 1: left jumps onto middle
-        animate('.stack-left', {
-          translateX: { to: 60, ease },
-          translateY: [
-            { to: -55, ease: 'outQuad', duration: dur * 0.5 },
-            { to: -30, ease: 'inQuad', duration: dur * 0.5 },
-          ],
-          duration: dur,
-          frameRate: 100,
-          delay: 400,
-        });
+      const rightAnim = animate('.stack-right', {
+        translateX: { to: -60, ease: 'outQuad' },
+        translateY: [
+          { to: -90, ease: 'outQuad', duration: dur * 0.5 },
+          { to: -60, ease: 'inQuad', duration: dur * 0.5 },
+        ],
+        duration: dur,
+        frameRate: 100,
+        autoplay: false,
+        onComplete: () => {
+          // hide right btn, show reset btn
+          const btnR = document.querySelector('.stack-btn-right');
+          const btnReset = document.querySelector('.stack-btn-reset');
+          if (btnR) { btnR.style.opacity = '0'; btnR.style.pointerEvents = 'none'; }
+          if (btnReset) { btnReset.style.opacity = '1'; btnReset.style.pointerEvents = 'auto'; }
+        },
+      });
 
-        // Step 2: right jumps onto stack
-        animate('.stack-right', {
-          translateX: { to: -60, ease },
-          translateY: [
-            { to: -90, ease: 'outQuad', duration: dur * 0.5 },
-            { to: -60, ease: 'inQuad', duration: dur * 0.5 },
-          ],
-          duration: dur,
-          frameRate: 100,
-          delay: 400 + dur + 200,
-          onComplete: () => {
-            // pause then restart
-            setTimeout(stackLoop, 1200);
-          },
-        });
-      };
+      const btnLeft  = document.querySelector('.stack-btn-left');
+      const btnRight = document.querySelector('.stack-btn-right');
+      const btnReset = document.querySelector('.stack-btn-reset');
 
-      stackLoop();
+      if (btnLeft)  btnLeft.addEventListener('click',  () => leftAnim.restart());
+      if (btnRight) btnRight.addEventListener('click', () => rightAnim.restart());
+      if (btnReset) btnReset.addEventListener('click', () => {
+        leftAnim.revert();
+        rightAnim.revert();
+        if (btnLeft)  { btnLeft.style.opacity  = '1'; btnLeft.style.pointerEvents  = 'auto'; }
+        if (btnRight) { btnRight.style.opacity = '0'; btnRight.style.pointerEvents = 'none'; }
+        if (btnReset) { btnReset.style.opacity = '0'; btnReset.style.pointerEvents = 'none'; }
+      });
 
     });
 
     return () => scope.current.revert();
   }, []);
+
+  const btnStyle = {
+    background: 'rgba(255,255,255,0.15)',
+    border: '1px solid rgba(255,255,255,0.3)',
+    color: '#fff',
+    borderRadius: '20px',
+    padding: '6px 18px',
+    fontSize: '0.75rem',
+    letterSpacing: '2px',
+    cursor: 'pointer',
+    transition: 'opacity 0.3s ease, background 0.2s ease',
+    fontFamily: 'Space Mono, monospace',
+  };
 
   return (
     <div ref={root} style={{ width: '100%' }}>
@@ -138,10 +167,8 @@ export default function Animation() {
             <span key={i} className="anim-letter" style={{
               display: 'inline-block',
               fontSize: 'clamp(3rem, 8vw, 6rem)',
-              fontWeight: 'bold',
-              color: '#8b5cf6',
-              letterSpacing: '4px',
-              margin: '0 2px',
+              fontWeight: 'bold', color: '#8b5cf6',
+              letterSpacing: '4px', margin: '0 2px',
             }}>
               {char}
             </span>
@@ -149,14 +176,9 @@ export default function Animation() {
         </div>
 
         <p className="anim-scramble" style={{
-          fontSize: '1rem',
-          color: '#aaa',
-          letterSpacing: '1px',
-          fontFamily: 'Space Mono, monospace',
-          textAlign: 'center',
-          maxWidth: '700px',
-          lineHeight: '1.8',
-          minHeight: '5rem',
+          fontSize: '1rem', color: '#aaa', letterSpacing: '1px',
+          fontFamily: 'Space Mono, monospace', textAlign: 'center',
+          maxWidth: '700px', lineHeight: '1.8', minHeight: '5rem',
         }}>
           In a world of technology and AI anything is possible, you just have to imagine it. But without the right tools and creativity, it can be hard to bring those ideas to life. There is a mountain of knowledge to climb, but the view from the top is worth it.
         </p>
@@ -164,29 +186,23 @@ export default function Animation() {
         <div style={{
           color: '#555', fontSize: '0.85rem', letterSpacing: '3px',
           marginTop: '20px', animation: 'pulse 2s ease-in-out infinite',
-        }}>
-          ↓ scroll
-        </div>
+        }}>↓ scroll</div>
       </div>
 
       {/* ── Scroll Section ── */}
       <div className="scroll-trigger" style={{
-        height: '300vh',
-        background: '#111',
-        position: 'relative',
+        height: '300vh', background: '#111', position: 'relative',
       }}>
         <div style={{
-          position: 'sticky', top: 0,
-          height: '100vh',
+          position: 'sticky', top: 0, height: '100vh',
           display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center',
-          overflow: 'hidden',
-          gap: '80px',
+          overflow: 'hidden', gap: '60px',
         }}>
-          {/* Expanding circle — centered absolutely */}
+
+          {/* Expanding circle — truly centered */}
           <div className="scroll-circle" style={{
-            width: '80px', height: '80px',
-            borderRadius: '50%',
+            width: '80px', height: '80px', borderRadius: '50%',
             background: '#2e2a36',
             position: 'absolute',
             top: '50%', left: '50%',
@@ -195,41 +211,52 @@ export default function Animation() {
             zIndex: 1,
           }} />
 
-          {/* Stacking circles — sit above the expanding circle */}
-          <div style={{
+          {/* Balls + buttons — fade in at 50% scroll */}
+          <div className="stack-scene" style={{
             position: 'relative', zIndex: 2,
-            display: 'flex', alignItems: 'flex-end',
-            justifyContent: 'center',
-            height: '120px',
-            gap: '0',
+            opacity: 0,
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', gap: '16px',
           }}>
-            <div className="stack-left" style={{
-              width: '50px', height: '50px', borderRadius: '50%',
-              background: '#ffffff', margin: '0 5px',
-              position: 'relative',
-            }} />
-            <div className="stack-mid" style={{
-              width: '50px', height: '50px', borderRadius: '50%',
-              background: '#ffffff', margin: '0 5px',
-              position: 'relative',
-            }} />
-            <div className="stack-right" style={{
-              width: '50px', height: '50px', borderRadius: '50%',
-              background: '#ffffff', margin: '0 5px',
-              position: 'relative',
-            }} />
+            {/* Balls row */}
+            <div style={{
+              display: 'flex', alignItems: 'flex-end',
+              justifyContent: 'center', height: '100px', gap: '0',
+            }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+                <div className="stack-left" style={{
+                  width: '50px', height: '50px', borderRadius: '50%',
+                  background: '#ffffff', margin: '0 5px', position: 'relative',
+                }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+                <div className="stack-mid" style={{
+                  width: '50px', height: '50px', borderRadius: '50%',
+                  background: '#ffffff', margin: '0 5px', position: 'relative',
+                }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+                <div className="stack-right" style={{
+                  width: '50px', height: '50px', borderRadius: '50%',
+                  background: '#ffffff', margin: '0 5px', position: 'relative',
+                }} />
+              </div>
+            </div>
+
+            {/* Buttons row — positioned under each ball */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', width: '200px' }}>
+              <button className="stack-btn-left" style={{ ...btnStyle, opacity: 1 }}>→</button>
+              <button className="stack-btn-reset" style={{ ...btnStyle, opacity: 0, pointerEvents: 'none' }}>↺</button>
+              <button className="stack-btn-right" style={{ ...btnStyle, opacity: 0, pointerEvents: 'none' }}>←</button>
+            </div>
           </div>
 
           {/* Reveal text */}
           <p className="scroll-reveal-text" style={{
             position: 'relative', zIndex: 2,
-            fontSize: 'clamp(1.5rem, 4vw, 3rem)',
-            fontWeight: 'bold',
-            color: '#ffffff',
-            letterSpacing: '4px',
-            fontFamily: 'Space Mono, monospace',
-            textAlign: 'center',
-            opacity: 0,
+            fontSize: 'clamp(1.5rem, 4vw, 3rem)', fontWeight: 'bold',
+            color: '#ffffff', letterSpacing: '4px',
+            fontFamily: 'Space Mono, monospace', textAlign: 'center', opacity: 0,
           }}>
             now for the fun part
           </p>
@@ -240,6 +267,9 @@ export default function Animation() {
         @keyframes pulse {
           0%, 100% { opacity: 0.3; transform: translateY(0); }
           50% { opacity: 1; transform: translateY(8px); }
+        }
+        .stack-btn-left:hover, .stack-btn-right:hover, .stack-btn-reset:hover {
+          background: rgba(255,255,255,0.25) !important;
         }
       `}</style>
     </div>
