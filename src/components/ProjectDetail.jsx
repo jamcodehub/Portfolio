@@ -35,13 +35,11 @@ export default function ProjectDetail() {
 
   // Animation page — just the demo, no content
   if (project.hasDemo === 'animation') return (
-    <div className="project-detail" ref={root}>
-      <div className="container">
-        <button className="back-button" onClick={() => navigate('/')}>← Back to Portfolio</button>
-        <div className="demo-section" style={{ marginTop: 0 }}>
-          <Animation />
-        </div>
-      </div>
+    <div ref={root} style={{ position: 'relative' }}>
+      <button className="back-button" onClick={() => navigate('/')} style={{
+        position: 'fixed', top: 20, left: 20, zIndex: 100,
+      }}>← Back</button>
+      <Animation />
     </div>
   );
 

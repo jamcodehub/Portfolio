@@ -1,4 +1,4 @@
-import { animate, createScope, stagger, scrambleText, onScroll, splitText, utils } from 'animejs';
+import { animate, createScope, stagger, scrambleText, onScroll, splitText } from 'animejs';
 import { useEffect, useRef } from 'react';
 
 export default function Animation() {
@@ -8,7 +8,7 @@ export default function Animation() {
   useEffect(() => {
     scope.current = createScope({ root }).add(() => {
 
-      // ── Hero: bouncing letters ──
+      // ── Bouncing letters ──
       animate('.anim-letter', {
         translateY: [
           { to: -30, ease: 'inOut(3)', duration: 300 },
@@ -19,44 +19,45 @@ export default function Animation() {
         loopDelay: 1000,
       });
 
-      // ── Scramble text ──
+      // ── Scramble text — plays once and stays ──
       animate('.anim-scramble', {
-        innerHTML: scrambleText('In a world of technology anything is possible'),
+        innerHTML: scrambleText(
+          'In a world of technology and AI anything is possible, you just have to imagine it. But without the right tools and creativity, it can be hard to bring those ideas to life. There is a mountain of knowledge to climb, but the view from the top is worth it.'
+        ),
       });
 
-      // ── Scroll: circle expands to cover background ──
+      // ── Scroll: circle expands to fill screen ──
       animate('.scroll-circle', {
-        scale: [0, 40],
+        scale: [0, 60],
         ease: 'inOut(3)',
         autoplay: onScroll({
-          target: '.scroll-section',
-          container: '.anim-scroll-container',
-          enter: 'top top',
-          leave: 'bottom bottom',
-          sync: true,
+          target: '.scroll-trigger',
+          sync: 0.5,
         }),
-        onComplete: () => {
-          // reveal text when circle fully covers screen
-          const reveal = document.querySelector('.scroll-reveal-text');
-          if (reveal) reveal.style.opacity = '1';
-        }
       });
 
-      // ── Reveal text with splitText ──
-      const textEl = document.querySelector('.scroll-reveal-text');
-      if (textEl) {
-        const split = splitText('.scroll-reveal-text', {
-          words: { wrap: 'clip' },
-        });
-        split.addEffect((self) => animate(self.words, {
-          y: ['100%', '0%'],
-          duration: 1250,
-          ease: 'out(3)',
-          delay: stagger(100),
-          loop: true,
-          alternate: true,
-        }));
-      }
+      // ── Reveal text opacity tied to scroll progress ──
+      animate('.scroll-reveal-text', {
+        opacity: [0, 1],
+        ease: 'inOut(3)',
+        autoplay: onScroll({
+          target: '.scroll-trigger',
+          sync: 0.5,
+          enter: '50% bottom',
+          leave: '100% bottom',
+        }),
+      });
+
+      // ── splitText reveal animation ──
+      const split = splitText('.scroll-reveal-text', {
+        words: { wrap: 'clip' },
+      });
+      split.addEffect((self) => animate(self.words, {
+        y: ['100%', '0%'],
+        duration: 1250,
+        ease: 'out(3)',
+        delay: stagger(100),
+      }));
 
     });
 
@@ -64,46 +65,58 @@ export default function Animation() {
   }, []);
 
   return (
-    <div ref={root}>
+    <div ref={root} style={{ width: '100%' }}>
 
-      {/* ── Hero Section ── */}
+      {/* ── Hero ── */}
       <div style={{
-        display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-        minHeight: '500px', background: '#b7b7b7', borderRadius: '24px 24px 0 0',
-        gap: '40px', padding: '60px 40px',
+        display: 'flex', flexDirection: 'column',
+        justifyContent: 'center', alignItems: 'center',
+        minHeight: '100vh', background: '#111',
+        gap: '40px', padding: '80px 40px',
       }}>
-        <div style={{ display: 'flex' }}>
-          {'ANIMATE'.split('').map((char, i) => (
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+          {'ANIMATION'.split('').map((char, i) => (
             <span key={i} className="anim-letter" style={{
               display: 'inline-block',
-              fontSize: '5rem', fontWeight: 'bold',
-              color: '#8b5cf6', letterSpacing: '4px', margin: '0 2px',
+              fontSize: 'clamp(3rem, 8vw, 6rem)',
+              fontWeight: 'bold',
+              color: '#8b5cf6',
+              letterSpacing: '4px',
+              margin: '0 2px',
             }}>
               {char}
             </span>
           ))}
         </div>
+
         <p className="anim-scramble" style={{
-          fontSize: '1.2rem', color: '#aaa', letterSpacing: '2px',
-          fontFamily: 'Space Mono, monospace', textAlign: 'center', minHeight: '2rem',
+          fontSize: '1rem',
+          color: '#aaa',
+          letterSpacing: '1px',
+          fontFamily: 'Space Mono, monospace',
+          textAlign: 'center',
+          maxWidth: '700px',
+          lineHeight: '1.8',
+          minHeight: '5rem',
         }}>
-          In a world of technology anything is possible
+          In a world of technology and AI anything is possible, you just have to imagine it. But without the right tools and creativity, it can be hard to bring those ideas to life. There is a mountain of knowledge to climb, but the view from the top is worth it.
         </p>
-        <div style={{ color: '#555', fontSize: '0.9rem', letterSpacing: '2px', marginTop: '20px', animation: 'pulse 2s ease-in-out infinite' }}>
+
+        <div style={{
+          color: '#555', fontSize: '0.85rem', letterSpacing: '3px',
+          marginTop: '40px', animation: 'pulse 2s ease-in-out infinite',
+        }}>
           ↓ scroll
         </div>
       </div>
 
       {/* ── Scroll Section ── */}
-      <div className="anim-scroll-container" style={{
+      <div className="scroll-trigger" style={{
         height: '300vh',
         background: '#111',
-        borderRadius: '0 0 24px 24px',
         position: 'relative',
-        overflow: 'hidden',
       }}>
-        {/* Sticky frame that holds the circle + text */}
-        <div className="scroll-section" style={{
+        <div style={{
           position: 'sticky', top: 0,
           height: '100vh',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -111,25 +124,27 @@ export default function Animation() {
         }}>
           {/* Expanding circle */}
           <div className="scroll-circle" style={{
-            width: '60px', height: '60px',
+            width: '80px', height: '80px',
             borderRadius: '50%',
             background: '#2e2a36',
             position: 'absolute',
             top: '50%', left: '50%',
-            transform: 'translate(-50%, -50%) scale(0)',
+            translateX: '-50%',
+            translateY: '-50%',
             transformOrigin: 'center center',
             zIndex: 1,
           }} />
 
-          {/* Reveal text — hidden until circle covers screen */}
+          {/* Reveal text */}
           <p className="scroll-reveal-text" style={{
             position: 'relative', zIndex: 2,
-            fontSize: '3rem', fontWeight: 'bold',
-            color: '#ffffff', letterSpacing: '4px',
+            fontSize: 'clamp(1.5rem, 4vw, 3rem)',
+            fontWeight: 'bold',
+            color: '#ffffff',
+            letterSpacing: '4px',
             fontFamily: 'Space Mono, monospace',
             textAlign: 'center',
             opacity: 0,
-            transition: 'opacity 0.4s ease',
           }}>
             now for the fun part
           </p>
@@ -139,7 +154,7 @@ export default function Animation() {
       <style>{`
         @keyframes pulse {
           0%, 100% { opacity: 0.3; transform: translateY(0); }
-          50% { opacity: 1; transform: translateY(6px); }
+          50% { opacity: 1; transform: translateY(8px); }
         }
       `}</style>
     </div>
