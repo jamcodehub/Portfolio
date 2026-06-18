@@ -1,5 +1,5 @@
-import { animate, stagger } from 'animejs';
-import { useEffect } from 'react';
+import { animate, createScope, stagger } from 'animejs';
+import { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { projects } from '../data/projects';
 import DesignGallery from './DesignGallery';
@@ -9,22 +9,23 @@ import Animation from './Animation';
 export default function ProjectDetail() {
   const { cat, idx } = useParams();
   const navigate = useNavigate();
+  const root = useRef(null);
+  const scope = useRef(null);
   const project = projects[cat]?.[parseInt(idx)];
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    // Small delay so elements are in the DOM before animating
-    requestAnimationFrame(() => {
-      animate({
-        targets: '.project-detail h1, .project-detail .category-tag, .project-detail .project-content, .project-detail .demo-section',
-        translateY: [16, 0],
-        delay: stagger(80), duration: 500, easing: 'easeOutQuad',
+    scope.current = createScope({ root }).add(() => {
+      animate('.project-detail-header, .project-content, .demo-section', {
+        translateY: [16, 0], opacity: [0, 1],
+        delay: stagger(80), duration: 500, ease: 'outQuad',
       });
     });
+    window.scrollTo(0, 0);
+    return () => scope.current.revert();
   }, [cat, idx]);
 
   if (!project) return (
-    <div className="project-detail">
+    <div className="project-detail" ref={root}>
       <div className="container">
         <button className="back-button" onClick={() => navigate('/')}>← Back to Portfolio</button>
         <h1>Project not found</h1>
@@ -32,12 +33,26 @@ export default function ProjectDetail() {
     </div>
   );
 
-  return (
-    <div className="project-detail">
+  // Animation page — just the demo, no content
+  if (project.hasDemo === 'animation') return (
+    <div className="project-detail" ref={root}>
       <div className="container">
         <button className="back-button" onClick={() => navigate('/')}>← Back to Portfolio</button>
-        <h1>{project.name}</h1>
-        <span className="category-tag">{project.category}</span>
+        <div className="demo-section" style={{ marginTop: 0 }}>
+          <Animation />
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="project-detail" ref={root}>
+      <div className="container">
+        <button className="back-button" onClick={() => navigate('/')}>← Back to Portfolio</button>
+        <div className="project-detail-header">
+          <h1>{project.name}</h1>
+          <span className="category-tag">{project.category}</span>
+        </div>
 
         {project.hasDemo === 'stepquest' && (
           <div className="demo-section">
@@ -56,9 +71,6 @@ export default function ProjectDetail() {
         )}
         {project.hasDemo === 'lumen' && (
           <div className="demo-section"><LumenElixirDemo /></div>
-        )}
-        {project.hasDemo === 'animation' && (
-          <div className="demo-section"><Animation /></div>
         )}
 
         {project.isConfidential && (
