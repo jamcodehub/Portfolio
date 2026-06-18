@@ -21,9 +21,13 @@ export default function Animation() {
 
       // ── Scramble text — plays once and stays ──
       animate('.anim-scramble', {
-        innerHTML: scrambleText(
-          'In a world of technology and AI anything is possible, you just have to imagine it. But without the right tools and creativity, it can be hard to bring those ideas to life. There is a mountain of knowledge to climb, but the view from the top is worth it.'
-        ),
+        innerHTML: scrambleText({
+          chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+          speed: 0.5,
+          text: 'In a world of technology and AI anything is possible, you just have to imagine it. But without the right tools and creativity, it can be hard to bring those ideas to life. There is a mountain of knowledge to climb, but the view from the top is worth it.',
+        }),
+        duration: 6000,
+        ease: 'linear',
       });
 
       // ── Scroll: circle expands to fill screen ──
