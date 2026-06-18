@@ -5,114 +5,119 @@ export default function Animation() {
   const root = useRef(null);
 
   useEffect(() => {
+    // Wait one frame for DOM to fully paint before anime.js searches for elements
+    const timer = setTimeout(() => {
 
-    // ── Bouncing letters ──
-    animate('.anim-letter', {
-      translateY: [
-        { to: -30, ease: 'inOut(3)', duration: 300 },
-        { to: 0, ease: 'spring({ bounce: 0.7 })' },
-      ],
-      delay: stagger(60),
-      loop: true,
-      loopDelay: 1000,
-      frameRate: 100,
-    });
+      // ── Bouncing letters ──
+      animate('.anim-letter', {
+        translateY: [
+          { to: -30, ease: 'inOut(3)', duration: 300 },
+          { to: 0, ease: 'spring({ bounce: 0.7 })' },
+        ],
+        delay: stagger(60),
+        loop: true,
+        loopDelay: 1000,
+        frameRate: 100,
+      });
 
-    // ── Scramble text (plays once, stays) ──
-    animate('.anim-scramble', {
-      innerHTML: scrambleText({
-        chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
-        speed: 0.5,
-        text: 'In a world of technology and AI anything is possible, you just have to imagine it. But without the right tools and creativity, it can be hard to bring those ideas to life. There is a mountain of knowledge to climb, but the view from the top is worth it.',
-      }),
-      duration: 6000,
-      ease: 'linear',
-      frameRate: 100,
-    });
+      // ── Scramble text (plays once, stays) ──
+      animate('.anim-scramble', {
+        innerHTML: scrambleText({
+          chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+          speed: 0.5,
+          text: 'In a world of technology and AI anything is possible, you just have to imagine it. But without the right tools and creativity, it can be hard to bring those ideas to life. There is a mountain of knowledge to climb, but the view from the top is worth it.',
+        }),
+        duration: 6000,
+        ease: 'linear',
+        frameRate: 100,
+      });
 
-    // ── Circle expands on scroll ──
-    const [ scrollTrigger ] = utils.$('.scroll-trigger');
+      // ── Circle expands on scroll ──
+      const [ scrollTrigger ] = utils.$('.scroll-trigger');
 
-    animate('.scroll-circle', {
-      scale: [0, 60],
-      ease: 'inOut(3)',
-      frameRate: 100,
-      autoplay: onScroll({ target: scrollTrigger, sync: 0.5 }),
-    });
+      animate('.scroll-circle', {
+        scale: [0, 60],
+        ease: 'inOut(3)',
+        frameRate: 100,
+        autoplay: onScroll({ target: scrollTrigger, sync: 0.5 }),
+      });
 
-    // ── Balls fade in mid-scroll ──
-    animate('.stack-scene', {
-      opacity: [0, 1],
-      duration: 1,
-      frameRate: 100,
-      autoplay: onScroll({ target: scrollTrigger, sync: { start: 0.4, end: 0.6 } }),
-    });
+      // ── Balls fade in mid-scroll ──
+      animate('.stack-scene', {
+        opacity: [0, 1],
+        duration: 1,
+        frameRate: 100,
+        autoplay: onScroll({ target: scrollTrigger, sync: { start: 0.4, end: 0.6 } }),
+      });
 
-    // ── Reveal text fades in late-scroll ──
-    animate('.scroll-reveal-text', {
-      opacity: [0, 1],
-      duration: 1,
-      frameRate: 100,
-      autoplay: onScroll({ target: scrollTrigger, sync: { start: 0.65, end: 0.9 } }),
-    });
+      // ── Reveal text fades in late-scroll ──
+      animate('.scroll-reveal-text', {
+        opacity: [0, 1],
+        duration: 1,
+        frameRate: 100,
+        autoplay: onScroll({ target: scrollTrigger, sync: { start: 0.65, end: 0.9 } }),
+      });
 
-    // ── splitText word reveal ──
-    const split = splitText('.scroll-reveal-text', { words: { wrap: 'clip' } });
-    split.addEffect(self => animate(self.words, {
-      y: ['100%', '0%'],
-      duration: 1250,
-      ease: 'out(3)',
-      delay: stagger(100),
-      frameRate: 100,
-    }));
+      // ── splitText word reveal ──
+      const split = splitText('.scroll-reveal-text', { words: { wrap: 'clip' } });
+      split.addEffect(self => animate(self.words, {
+        y: ['100%', '0%'],
+        duration: 1250,
+        ease: 'out(3)',
+        delay: stagger(100),
+        frameRate: 100,
+      }));
 
-    // ── Stacking balls (button controlled) ──
-    const [ leftBall  ] = utils.$('.stack-left');
-    const [ rightBall ] = utils.$('.stack-right');
-    const [ btnLeft   ] = utils.$('.stack-btn-left');
-    const [ btnRight  ] = utils.$('.stack-btn-right');
-    const [ btnReset  ] = utils.$('.stack-btn-reset');
+      // ── Stacking balls (button controlled) ──
+      const [ leftBall  ] = utils.$('.stack-left');
+      const [ rightBall ] = utils.$('.stack-right');
+      const [ btnLeft   ] = utils.$('.stack-btn-left');
+      const [ btnRight  ] = utils.$('.stack-btn-right');
+      const [ btnReset  ] = utils.$('.stack-btn-reset');
 
-    const leftAnim = animate(leftBall, {
-      translateX: { to: 65, ease: 'outQuad' },
-      translateY: [
-        { to: -80, ease: 'outQuad', duration: 250 },
-        { to: -62, ease: 'inQuad', duration: 250 },
-      ],
-      duration: 500,
-      frameRate: 100,
-      autoplay: false,
-      onComplete: () => {
-        btnLeft.style.opacity = '0';   btnLeft.style.pointerEvents = 'none';
-        btnRight.style.opacity = '1';  btnRight.style.pointerEvents = 'auto';
-      },
-    });
+      const leftAnim = animate(leftBall, {
+        translateX: { to: 65, ease: 'outQuad' },
+        translateY: [
+          { to: -80, ease: 'outQuad', duration: 250 },
+          { to: -62, ease: 'inQuad',  duration: 250 },
+        ],
+        duration: 500,
+        frameRate: 100,
+        autoplay: false,
+        onComplete: () => {
+          btnLeft.style.opacity = '0';  btnLeft.style.pointerEvents = 'none';
+          btnRight.style.opacity = '1'; btnRight.style.pointerEvents = 'auto';
+        },
+      });
 
-    const rightAnim = animate(rightBall, {
-      translateX: { to: -65, ease: 'outQuad' },
-      translateY: [
-        { to: -150, ease: 'outQuad', duration: 250 },
-        { to: -124, ease: 'inQuad', duration: 250 },
-      ],
-      duration: 500,
-      frameRate: 100,
-      autoplay: false,
-      onComplete: () => {
+      const rightAnim = animate(rightBall, {
+        translateX: { to: -65, ease: 'outQuad' },
+        translateY: [
+          { to: -150, ease: 'outQuad', duration: 250 },
+          { to: -124, ease: 'inQuad',  duration: 250 },
+        ],
+        duration: 500,
+        frameRate: 100,
+        autoplay: false,
+        onComplete: () => {
+          btnRight.style.opacity = '0'; btnRight.style.pointerEvents = 'none';
+          btnReset.style.opacity = '1'; btnReset.style.pointerEvents = 'auto';
+        },
+      });
+
+      btnLeft.addEventListener('click',  () => leftAnim.restart());
+      btnRight.addEventListener('click', () => rightAnim.restart());
+      btnReset.addEventListener('click', () => {
+        leftAnim.revert();
+        rightAnim.revert();
+        btnLeft.style.opacity  = '1';  btnLeft.style.pointerEvents  = 'auto';
         btnRight.style.opacity = '0';  btnRight.style.pointerEvents = 'none';
-        btnReset.style.opacity = '1';  btnReset.style.pointerEvents = 'auto';
-      },
-    });
+        btnReset.style.opacity = '0';  btnReset.style.pointerEvents = 'none';
+      });
 
-    btnLeft.addEventListener('click',  () => leftAnim.restart());
-    btnRight.addEventListener('click', () => rightAnim.restart());
-    btnReset.addEventListener('click', () => {
-      leftAnim.revert();
-      rightAnim.revert();
-      btnLeft.style.opacity  = '1';  btnLeft.style.pointerEvents  = 'auto';
-      btnRight.style.opacity = '0';  btnRight.style.pointerEvents = 'none';
-      btnReset.style.opacity = '0';  btnReset.style.pointerEvents = 'none';
-    });
+    }, 50);
 
+    return () => clearTimeout(timer);
   }, []);
 
   const btnStyle = {
