@@ -1,5 +1,5 @@
 import { animate, createScope, stagger, scrambleText, onScroll, splitText } from 'animejs';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 export default function Animation() {
   const root = useRef(null);
@@ -20,7 +20,7 @@ export default function Animation() {
         frameRate: 100,
       });
 
-      // ── Scramble text — plays once and stays ──
+      // ── Scramble text ──
       animate('.anim-scramble', {
         innerHTML: scrambleText({
           chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
@@ -32,7 +32,7 @@ export default function Animation() {
         frameRate: 100,
       });
 
-      // ── Circle expands on scroll ──
+      // ── Circle expands on scroll, synced to scroll position ──
       animate('.scroll-circle', {
         scale: [0, 60],
         ease: 'inOut(3)',
@@ -43,29 +43,27 @@ export default function Animation() {
         }),
       });
 
-      // ── Balls + buttons fade in once circle reaches ~50% ──
+      // ── Balls fade in once circle reaches ~50% (using onUpdate progress) ──
       animate('.stack-scene', {
         opacity: [0, 1],
-        ease: 'inOut(2)',
+        duration: 1,
+        ease: 'linear',
         frameRate: 100,
         autoplay: onScroll({
           target: '.scroll-trigger',
-          sync: 0.5,
-          enter: '40% bottom',
-          leave: '70% bottom',
+          sync: { start: 0.4, end: 0.6 },
         }),
       });
 
-      // ── Reveal text opacity ──
+      // ── Reveal text ──
       animate('.scroll-reveal-text', {
         opacity: [0, 1],
-        ease: 'inOut(3)',
+        ease: 'linear',
+        duration: 1,
         frameRate: 100,
         autoplay: onScroll({
           target: '.scroll-trigger',
-          sync: 0.5,
-          enter: '50% bottom',
-          leave: '100% bottom',
+          sync: { start: 0.6, end: 0.9 },
         }),
       });
 
@@ -85,16 +83,15 @@ export default function Animation() {
       const dur = 500;
 
       const leftAnim = animate('.stack-left', {
-        translateX: { to: 60, ease: 'outQuad' },
+        translateX: { to: 65, ease: 'outQuad' },
         translateY: [
-          { to: -55, ease: 'outQuad', duration: dur * 0.5 },
-          { to: -30, ease: 'inQuad', duration: dur * 0.5 },
+          { to: -80, ease: 'outQuad', duration: dur * 0.5 },
+          { to: -62, ease: 'inQuad', duration: dur * 0.5 },
         ],
         duration: dur,
         frameRate: 100,
         autoplay: false,
         onComplete: () => {
-          // hide left btn, show right btn
           const btnL = document.querySelector('.stack-btn-left');
           const btnR = document.querySelector('.stack-btn-right');
           if (btnL) { btnL.style.opacity = '0'; btnL.style.pointerEvents = 'none'; }
@@ -103,16 +100,15 @@ export default function Animation() {
       });
 
       const rightAnim = animate('.stack-right', {
-        translateX: { to: -60, ease: 'outQuad' },
+        translateX: { to: -65, ease: 'outQuad' },
         translateY: [
-          { to: -90, ease: 'outQuad', duration: dur * 0.5 },
-          { to: -60, ease: 'inQuad', duration: dur * 0.5 },
+          { to: -150, ease: 'outQuad', duration: dur * 0.5 },
+          { to: -124, ease: 'inQuad', duration: dur * 0.5 },
         ],
         duration: dur,
         frameRate: 100,
         autoplay: false,
         onComplete: () => {
-          // hide right btn, show reset btn
           const btnR = document.querySelector('.stack-btn-right');
           const btnReset = document.querySelector('.stack-btn-reset');
           if (btnR) { btnR.style.opacity = '0'; btnR.style.pointerEvents = 'none'; }
@@ -199,8 +195,7 @@ export default function Animation() {
           alignItems: 'center', justifyContent: 'center',
           overflow: 'hidden', gap: '60px',
         }}>
-
-          {/* Expanding circle — truly centered */}
+          {/* Expanding circle */}
           <div className="scroll-circle" style={{
             width: '80px', height: '80px', borderRadius: '50%',
             background: '#2e2a36',
@@ -211,41 +206,34 @@ export default function Animation() {
             zIndex: 1,
           }} />
 
-          {/* Balls + buttons — fade in at 50% scroll */}
+          {/* Balls + buttons — fade in via scroll */}
           <div className="stack-scene" style={{
             position: 'relative', zIndex: 2,
             opacity: 0,
             display: 'flex', flexDirection: 'column',
-            alignItems: 'center', gap: '16px',
+            alignItems: 'center', gap: '20px',
           }}>
-            {/* Balls row */}
             <div style={{
               display: 'flex', alignItems: 'flex-end',
-              justifyContent: 'center', height: '100px', gap: '0',
+              justifyContent: 'center',
+              height: '180px', position: 'relative',
             }}>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-                <div className="stack-left" style={{
-                  width: '50px', height: '50px', borderRadius: '50%',
-                  background: '#ffffff', margin: '0 5px', position: 'relative',
-                }} />
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-                <div className="stack-mid" style={{
-                  width: '50px', height: '50px', borderRadius: '50%',
-                  background: '#ffffff', margin: '0 5px', position: 'relative',
-                }} />
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-                <div className="stack-right" style={{
-                  width: '50px', height: '50px', borderRadius: '50%',
-                  background: '#ffffff', margin: '0 5px', position: 'relative',
-                }} />
-              </div>
+              <div className="stack-left" style={{
+                width: '50px', height: '50px', borderRadius: '50%',
+                background: '#ffffff', margin: '0 8px', flexShrink: 0,
+              }} />
+              <div className="stack-mid" style={{
+                width: '50px', height: '50px', borderRadius: '50%',
+                background: '#ffffff', margin: '0 8px', flexShrink: 0,
+              }} />
+              <div className="stack-right" style={{
+                width: '50px', height: '50px', borderRadius: '50%',
+                background: '#ffffff', margin: '0 8px', flexShrink: 0,
+              }} />
             </div>
 
-            {/* Buttons row — positioned under each ball */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', width: '200px' }}>
-              <button className="stack-btn-left" style={{ ...btnStyle, opacity: 1 }}>→</button>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
+              <button className="stack-btn-left"  style={{ ...btnStyle, opacity: 1 }}>→</button>
               <button className="stack-btn-reset" style={{ ...btnStyle, opacity: 0, pointerEvents: 'none' }}>↺</button>
               <button className="stack-btn-right" style={{ ...btnStyle, opacity: 0, pointerEvents: 'none' }}>←</button>
             </div>
