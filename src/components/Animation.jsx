@@ -29,11 +29,11 @@ export default function Animation() {
   return (
     <div ref={root} style={{
       display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-      minHeight: '400px', background: '#111', borderRadius: '24px', overflow: 'hidden',
+      minHeight: '400px', background: '#2a2b36', borderRadius: '200px', overflow: 'hidden',
       gap: '40px', padding: '60px 40px',
     }}>
       <div style={{ display: 'flex' }}>
-        {'ANIMATE'.split('').map((char, i) => (
+        {'ANIMATION'.split('').map((char, i) => (
           <span key={i} className="anim-letter" style={{
             display: 'inline-block',
             fontSize: '5rem', fontWeight: 'bold',
