@@ -17,9 +17,10 @@ export default function Animation() {
         delay: stagger(60),
         loop: true,
         loopDelay: 1000,
+        frameRate: 100,
       });
 
-      // ── Scramble text — plays once and stays ──
+      // ── Scramble text ──
       animate('.anim-scramble', {
         innerHTML: scrambleText({
           chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
@@ -28,22 +29,25 @@ export default function Animation() {
         }),
         duration: 6000,
         ease: 'linear',
+        frameRate: 100,
       });
 
       // ── Scroll: circle expands to fill screen ──
       animate('.scroll-circle', {
         scale: [0, 60],
         ease: 'inOut(3)',
+        frameRate: 100,
         autoplay: onScroll({
           target: '.scroll-trigger',
           sync: 0.5,
         }),
       });
 
-      // ── Reveal text opacity tied to scroll progress ──
+      // ── Reveal text opacity ──
       animate('.scroll-reveal-text', {
         opacity: [0, 1],
         ease: 'inOut(3)',
+        frameRate: 100,
         autoplay: onScroll({
           target: '.scroll-trigger',
           sync: 0.5,
@@ -52,7 +56,7 @@ export default function Animation() {
         }),
       });
 
-      // ── splitText reveal animation ──
+      // ── splitText reveal ──
       const split = splitText('.scroll-reveal-text', {
         words: { wrap: 'clip' },
       });
@@ -61,7 +65,58 @@ export default function Animation() {
         duration: 1250,
         ease: 'out(3)',
         delay: stagger(100),
+        frameRate: 100,
       }));
+
+      // ── Stacking circles animation (loops) ──
+      const stackLoop = () => {
+        const dur = 500;
+        const ease = 'outQuad';
+
+        // Reset positions
+        animate('.stack-left', {
+          translateX: 0, translateY: 0, scale: 1, opacity: 1,
+          duration: 0,
+        });
+        animate('.stack-right', {
+          translateX: 0, translateY: 0, scale: 1, opacity: 1,
+          duration: 0,
+        });
+        animate('.stack-mid', {
+          translateY: 0, scale: 1,
+          duration: 0,
+        });
+
+        // Step 1: left jumps onto middle
+        animate('.stack-left', {
+          translateX: { to: 60, ease },
+          translateY: [
+            { to: -55, ease: 'outQuad', duration: dur * 0.5 },
+            { to: -30, ease: 'inQuad', duration: dur * 0.5 },
+          ],
+          duration: dur,
+          frameRate: 100,
+          delay: 400,
+        });
+
+        // Step 2: right jumps onto stack
+        animate('.stack-right', {
+          translateX: { to: -60, ease },
+          translateY: [
+            { to: -90, ease: 'outQuad', duration: dur * 0.5 },
+            { to: -60, ease: 'inQuad', duration: dur * 0.5 },
+          ],
+          duration: dur,
+          frameRate: 100,
+          delay: 400 + dur + 200,
+          onComplete: () => {
+            // pause then restart
+            setTimeout(stackLoop, 1200);
+          },
+        });
+      };
+
+      stackLoop();
 
     });
 
@@ -108,7 +163,7 @@ export default function Animation() {
 
         <div style={{
           color: '#555', fontSize: '0.85rem', letterSpacing: '3px',
-          marginTop: '40px', animation: 'pulse 2s ease-in-out infinite',
+          marginTop: '20px', animation: 'pulse 2s ease-in-out infinite',
         }}>
           ↓ scroll
         </div>
@@ -123,21 +178,47 @@ export default function Animation() {
         <div style={{
           position: 'sticky', top: 0,
           height: '100vh',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
           overflow: 'hidden',
+          gap: '80px',
         }}>
-          {/* Expanding circle */}
+          {/* Expanding circle — centered absolutely */}
           <div className="scroll-circle" style={{
             width: '80px', height: '80px',
             borderRadius: '50%',
             background: '#2e2a36',
             position: 'absolute',
             top: '50%', left: '50%',
-            translateX: '-50%',
-            translateY: '-50%',
+            marginLeft: '-40px', marginTop: '-40px',
             transformOrigin: 'center center',
             zIndex: 1,
           }} />
+
+          {/* Stacking circles — sit above the expanding circle */}
+          <div style={{
+            position: 'relative', zIndex: 2,
+            display: 'flex', alignItems: 'flex-end',
+            justifyContent: 'center',
+            height: '120px',
+            gap: '0',
+          }}>
+            <div className="stack-left" style={{
+              width: '50px', height: '50px', borderRadius: '50%',
+              background: '#ffffff', margin: '0 5px',
+              position: 'relative',
+            }} />
+            <div className="stack-mid" style={{
+              width: '50px', height: '50px', borderRadius: '50%',
+              background: '#ffffff', margin: '0 5px',
+              position: 'relative',
+            }} />
+            <div className="stack-right" style={{
+              width: '50px', height: '50px', borderRadius: '50%',
+              background: '#ffffff', margin: '0 5px',
+              position: 'relative',
+            }} />
+          </div>
 
           {/* Reveal text */}
           <p className="scroll-reveal-text" style={{

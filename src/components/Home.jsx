@@ -16,11 +16,11 @@ export default function Home() {
     scope.current = createScope({ root }).add(() => {
       animate('.header-content', {
         translateY: [-10, 0], opacity: [0, 1],
-        duration: 600, ease: 'outQuad',
+        duration: 600, ease: 'outQuad', frameRate: 100,
       });
       animate('.category-card', {
         translateY: [20, 0], opacity: [0, 1],
-        delay: stagger(80), duration: 500, ease: 'outQuad',
+        delay: stagger(80), duration: 500, ease: 'outQuad', frameRate: 100,
       });
     });
     return () => scope.current.revert();
