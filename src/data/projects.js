@@ -1,4 +1,18 @@
 export const projects = {
+  animation: [
+    {
+      name: 'Interactive Animation Showcase',
+      category: 'Animation',
+      description: 'A dedicated interactive canvas demonstrating advanced web animation techniques, state management, and scroll-triggered visual effects.',
+      features: [
+        'Anime.js — Advanced timeline sequencing and keyframes',
+        'React Hooks (useRef, useEffect) — Lifecycle and DOM manipulation',
+        'Scroll-based triggers and dynamic scaling',
+        'Text scrambling and dynamic text splitting',
+      ],
+      hasDemo: 'animation',
+    },
+  ],
   prompt: [
     {
       name: 'StepQuest',
