@@ -16,7 +16,7 @@ export const projects = {
   prompt: [
     {
       name: 'StepQuest',
-      category: 'Prompt Engineering',
+      category: 'Web Based Projects',
       description: 'A comprehensive fitness tracking app built through iterative AI-assisted development, taking over 200+ prompt messages to reach a stable, production-ready state.',
       features: [
         'Apple Watch integration for real-time step tracking',
@@ -41,7 +41,7 @@ export const projects = {
     },
     {
       name: 'MindMotion',
-      category: 'Prompt Engineering',
+      category: 'Web Based Projects',
       description: 'An educational video platform designed as an intellectual alternative to TikTok, featuring iOS app and Node.js backend. Currently in proof of concept stage.',
       features: [
         'Short-form educational video content',
@@ -55,7 +55,7 @@ export const projects = {
     },
     {
       name: 'D&D Survivors',
-      category: 'Prompt Engineering',
+      category: 'Web Based Projects',
       description: 'Browser-based survival game inspired by Vampire Survivors with four character classes and sophisticated balance mechanics.',
       features: [
         'Four unique character classes with distinct abilities',
@@ -133,7 +133,7 @@ export const projects = {
 
 export const categories = [
   { key: 'animation',    label: 'Animation' },
-  { key: 'prompt',       label: 'Prompt Engineering' },
+  { key: 'prompt',       label: 'Web Based Projects' },
   { key: 'development',  label: 'Program Development' },
   { key: 'graphicDesign',label: 'Digital Design' },
   { key: 'websites',     label: 'Websites' },
