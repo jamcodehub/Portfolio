@@ -82,12 +82,12 @@ export default function ProjectDetail() {
           <p>{project.description}</p>
 
           <h2>{project.isConfidential ? 'Technologies & Skills Used' : project.skills ? 'Programs Used' : 'Key Features'}</h2>
-          <ul>{project.features.map(f => <li key={f}>{f}</li>)}</ul>
+          <ul>{project.features?.map(f => <li key={f}>{f}</li>)}</ul>
 
           {project.skills && (
             <>
               <h2>Design Skills</h2>
-              <ul>{project.skills.map(s => <li key={s}>{s}</li>)}</ul>
+              <ul>{project.skills?.map(s => <li key={s}>{s}</li>)}</ul>
             </>
           )}
 
@@ -97,14 +97,14 @@ export default function ProjectDetail() {
               <p style={{ marginBottom: '1rem', color: 'var(--gray)' }}>
                 This project required 200+ prompt messages to reach a stable state. Here are the key techniques that made it successful:
               </p>
-              <ul>{project.promptingTechniques.map(t => <li key={t}>{t}</li>)}</ul>
+              <ul>{project.promptingTechniques?.map(t => <li key={t}>{t}</li>)}</ul>
             </>
           )}
 
           {project.isConfidential && project.promptingTechniques && (
             <>
               <h2>Prompt Engineering Approach</h2>
-              <ul>{project.promptingTechniques.map(t => <li key={t}>{t}</li>)}</ul>
+              <ul>{project.promptingTechniques?.map(t => <li key={t}>{t}</li>)}</ul>
             </>
           )}
         </div>
